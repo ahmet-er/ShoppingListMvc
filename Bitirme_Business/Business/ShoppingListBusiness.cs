@@ -7,10 +7,12 @@ namespace Bitirme_Business.Business
     public class ShoppingListBusiness : IShoppingListBusiness
     {
         private readonly IGenericRepository<ShoppingList> _shoppingListRepo;
+        private readonly IShoppingListRepository _customShoppingListRepo;
 
-        public ShoppingListBusiness(IGenericRepository<ShoppingList> shoppingListRepo)
+        public ShoppingListBusiness(IGenericRepository<ShoppingList> shoppingListRepo, IShoppingListRepository customShoppingListRepo)
         {
             _shoppingListRepo = shoppingListRepo;
+            _customShoppingListRepo = customShoppingListRepo;
         }
 
         public void AddShoppingList(ShoppingList shoppingList)
@@ -32,6 +34,11 @@ namespace Bitirme_Business.Business
         public ShoppingList GetShoppingListById(int shoppingId)
         {
             return _shoppingListRepo.GetById(shoppingId);
+        }
+
+        public List<ShoppingList> GetShoppingListsByUserId(string userId)
+        {
+            return _customShoppingListRepo.GetShoppingListsByUserId(userId);
         }
 
         public void UpdateShoppingList(ShoppingList shoppingList)

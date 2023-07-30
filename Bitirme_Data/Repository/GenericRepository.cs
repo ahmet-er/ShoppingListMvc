@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Bitirme_Data.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : class /*BaseEntity*/
     {
         private ShoppingListDbContext _context;
         DbSet<T> _entity = null;

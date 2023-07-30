@@ -32,7 +32,7 @@ namespace Bitirme_Business.Business
         {
             var product = _productRepo.GetQuery()
                 .Include(p => p.Category)
-                .FirstOrDefault(p => p.Id == productId);
+                .FirstOrDefault(p => p.ProductID == productId);
 
             if(product == null)
             {

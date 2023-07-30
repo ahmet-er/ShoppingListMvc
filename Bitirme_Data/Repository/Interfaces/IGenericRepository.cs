@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Bitirme_Data.Repository.Interfaces
 {
-    public interface IGenericRepository<T> where T : BaseEntity
+    public interface IGenericRepository<T> where T : class /*BaseEntity*/
     {
         bool Add(T model);
         bool Update(T model);

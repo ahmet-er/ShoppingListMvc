@@ -31,12 +31,12 @@
                         <tr>
                             <th>@category.Name</th>
                             <th>
-                                <a class="text-primary" asp-controller="Inventory" asp-action="UpdateCategory" asp-route-id="@category.Id">
+                                <a class="text-primary" asp-controller="Inventory" asp-action="UpdateCategory" asp-route-id="@category.CategoryID">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             </th>
                             <th>
-                                <a class="text-danger" asp-action="DeleteCategory" asp-controller="Inventory" asp-route-id="@category.Id">
+                                <a class="text-danger" asp-action="DeleteCategory" asp-controller="Inventory" asp-route-id="@category.CategoryID">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </a>
                             </th>
@@ -56,7 +56,7 @@
                         <th scope="col">Ürün Adı</th>
                         <th scope="col">Ürün Fiyatı</th>
                         <th scope="col">Ürün Kategori</th>
-                        <th scope="col">Ürün URL</th> <!-- göstermeyebilirsin, ilerde kaldır -->
+                        @*<th scope="col">Ürün URL</th>*@ <!-- göstermeyebilirsin, ilerde kaldır -->
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -75,15 +75,15 @@
                             <th>@product.Price</th>
                             @*<th>@product.CategoryId</th>*@
                             <th>@product.Category.Name</th>
-                            <th>@product.ImageFilePath</th>
+                            @*<th>@product.ImageFilePath</th>*@
 
                             <th>
-                                <a class="text-primary" asp-controller="Inventory" asp-action="UpdateProduct" asp-route-id="@product.Id">
+                                <a class="text-primary" asp-controller="Inventory" asp-action="UpdateProduct" asp-route-id="@product.ProductID">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                             </th>
                             <th>
-                                <a class="text-danger" asp-action="DeleteProduct" asp-controller="Inventory" asp-route-id="@product.Id">
+                                <a class="text-danger" asp-action="DeleteProduct" asp-controller="Inventory" asp-route-id="@product.ProductID">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </a>
                             </th>

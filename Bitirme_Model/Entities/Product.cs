@@ -2,12 +2,18 @@
 
 namespace Bitirme_Model.Entities
 {
-    public class Product : BaseEntity
+    public class Product /*: BaseEntity*/
     {
-        public string? Name { get; set; }
+        public Product()
+        {
+            ShoppingLists = new HashSet<ShoppingListItem>();
+        }
+        public int ProductID { get; set; }
+        public string Name { get; set; }
         public decimal? Price { get; set; }
         public string? ImageFilePath { get; set; }
-        public int CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public int CategoryID { get; set; }
+        public Category Category { get; set; }
+        public ICollection<ShoppingListItem> ShoppingLists { get; set; }
     }
 }

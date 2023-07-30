@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bitirme_Projesi.Data.Migrations
 {
     [DbContext(typeof(ShoppingListDbContext))]
-    [Migration("20230724205338_EditProductPropertyName")]
-    partial class EditProductPropertyName
+    [Migration("20230727230033_RecreateDatabase")]
+    partial class RecreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,9 @@ namespace Bitirme_Projesi.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -74,7 +76,9 @@ namespace Bitirme_Projesi.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -98,56 +102,59 @@ namespace Bitirme_Projesi.Data.Migrations
 
             modelBuilder.Entity("Bitirme_Model.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Bitirme_Model.Entities.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ProductID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductID"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageFilePath")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductID");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Bitirme_Model.Entities.ShoppingList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ShoppingListID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingListID"));
 
                     b.Property<bool>("AlisverisTamamlandiMi")
                         .HasColumnType("bit");
@@ -160,26 +167,24 @@ namespace Bitirme_Projesi.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ShoppingListID");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserID");
 
                     b.ToTable("ShoppingLists");
                 });
 
             modelBuilder.Entity("Bitirme_Model.Entities.ShoppingListItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ShoppingListId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Aldimi")
                         .HasColumnType("bit");
@@ -188,19 +193,12 @@ namespace Bitirme_Projesi.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoppingListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("ShoppingListId", "ProductId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ShoppingListId");
 
                     b.ToTable("ShoppingListItems");
                 });
@@ -341,8 +339,8 @@ namespace Bitirme_Projesi.Data.Migrations
             modelBuilder.Entity("Bitirme_Model.Entities.Product", b =>
                 {
                     b.HasOne("Bitirme_Model.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -353,7 +351,9 @@ namespace Bitirme_Projesi.Data.Migrations
                 {
                     b.HasOne("Bitirme_Model.Entities.AppUser", "User")
                         .WithMany("ShoppingLists")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -361,13 +361,13 @@ namespace Bitirme_Projesi.Data.Migrations
             modelBuilder.Entity("Bitirme_Model.Entities.ShoppingListItem", b =>
                 {
                     b.HasOne("Bitirme_Model.Entities.Product", "Product")
-                        .WithMany()
+                        .WithMany("ShoppingLists")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Bitirme_Model.Entities.ShoppingList", "ShoppingList")
-                        .WithMany("ShoppingListItems")
+                        .WithMany("Products")
                         .HasForeignKey("ShoppingListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -433,9 +433,19 @@ namespace Bitirme_Projesi.Data.Migrations
                     b.Navigation("ShoppingLists");
                 });
 
+            modelBuilder.Entity("Bitirme_Model.Entities.Category", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Bitirme_Model.Entities.Product", b =>
+                {
+                    b.Navigation("ShoppingLists");
+                });
+
             modelBuilder.Entity("Bitirme_Model.Entities.ShoppingList", b =>
                 {
-                    b.Navigation("ShoppingListItems");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

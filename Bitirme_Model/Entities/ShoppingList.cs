@@ -3,15 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bitirme_Model.Entities
 {
-    public class ShoppingList : BaseEntity
+    public class ShoppingList /*: BaseEntity*/
     {
-        [Required]
-        [MaxLength(50, ErrorMessage = "50 Karekteri Aştınız")]
+        public ShoppingList()
+        {
+            Products = new HashSet<ShoppingListItem>();
+        }
+        public int ShoppingListID { get; set; }
         public string Name { get; set; }
-        public int UserId { get; set; }
         public bool AlisveriseCikildiMi { get; set; }
         public bool AlisverisTamamlandiMi { get; set; }
+        public string UserID { get; set; }
         public AppUser User { get; set; }
-        public List<ShoppingListItem> ShoppingListItems { get; set; }
+        public ICollection<ShoppingListItem> Products { get; set; }
     }
 }

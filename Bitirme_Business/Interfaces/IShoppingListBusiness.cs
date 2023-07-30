@@ -6,6 +6,7 @@ namespace Bitirme_Business.Interfaces
     {
         ShoppingList GetShoppingListById(int shoppingId);
         List<ShoppingList> GetAllShoppingList();
+        List<ShoppingList> GetShoppingListsByUserId(string userId);
         void AddShoppingList(ShoppingList shoppingList);
         void UpdateShoppingList(ShoppingList shoppingList);
         void DeleteShoppingList(int shoppingId);

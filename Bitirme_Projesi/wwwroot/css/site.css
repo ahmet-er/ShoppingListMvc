@@ -46,3 +46,14 @@ body {
 .card-footer {
     border-top: 0;
 }
+
+/* TEST BG */
+.bg-card {
+    background: url("../img/pexels.jpg");
+    background-size: cover;
+}
+
+/* nav-logo */
+.nav-logo{
+    height: 50px;
+}

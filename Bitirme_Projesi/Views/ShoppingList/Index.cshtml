@@ -1,64 +1,52 @@
-﻿
+﻿@model List<ShoppingList>
 
 <div class="row">
     <div class="col">
         <h3><span class="text-gradient d-inline"><i class="fa-solid fa-list"></i> | Listelerim</span></h3>
     </div>
     <div class="col-auto">
-        <a class="btn btn-outline-primary" asp-controller="ShoppingList" asp-action="AddShoppingList">
+        <a class="btn btn-outline-primary" asp-controller="ShoppingList" asp-action="CreateList">
             <i class="fa-solid fa-list-ul"></i> | Liste Ekle
         </a>
     </div>
 </div>
 <hr />
-<div class="row">
-    <!--list1-->
-    <div class="col-md-12 mb-4">
-        <div class="card clickable-card" onclick="cardClicked()">
-            <img src="" class="card-img-top" alt="">
-            <div class="card-body hand-card">
-                <h5 class="card-title">Liste 1</h5>
-                <p class="card-text">test açıklama</p>
-            </div>
-            <div class="card-footer text-right">
-                <button type="button" class="btn btn-primary mr-2" onclick="editCard()"><i class="fa-regular fa-pen-to-square fa-lg"></i></button>
-                <button type="button" class="btn btn-danger" onclick="deleteCard()"><i class="fa-solid fa-x fa-lg"></i></button>
-            </div>
-        </div>
-    </div>
-    <!--list2-->
-    <div class="col-md-12 mb-4">
-        <div class="card bg-light" onclick="cardClicked()">
-            <img src="" class="card-img-top" alt="">
-            <div class="row">
-                <div class="col-md-10">
-                    <div class="card-body hand-card clickable-card">
-                        <h5 class="card-title">Liste 2</h5>
-                        <p class="card-text">test açıklama</p>
-                    </div>
-                </div>
-                <div class="col-md-2 p-3">
-                    <div class="card-footer text-right bg-transparent">
-                        <div class="row">
-                            <button type="button" class="btn btn-outline-success mb-2" onclick="editCard()"><i class="fa-regular fa-pen-to-square fa-xl"></i></button>
-                            <button type="button" class="btn btn-outline-danger" onclick="deleteCard()"><i class="fa-solid fa-x fa-xl"></i></button>
+@if (Model.Count == 0)
+{
+    <p>
+        <strong><i class="fa-solid fa-exclamation fa-lg text-danger"></i> Liste kaydı bulunamadı</strong>
+    </p>
+}
+else
+{
+    <div class="row">
+        @foreach (var shoppingList in Model)
+        {
+            <div class="col-md-12 mb-4">
+                <div class="card bg-card text-light" onclick="cardClicked(@shoppingList.ShoppingListID)">
+                    <img src="" class="card-img-top" alt="">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="card-body hand-card clickable-card">
+                                <h4 class="card-title">@shoppingList.Name</h4>
+                                @*<p class="card-text">test açıklama</p>*@
+                            </div>
+                        </div>
+                        <div class="col-md-2 p-3">
+                            <div class="card-footer text-right bg-transparent">
+                                <div class="row">
+                                    <a type="button" class="btn btn-light mb-2" asp-controller="ShoppingList" asp-action="EditList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-regular fa-pen-to-square fa-xl"></i></a>
+                                    <a type="button" class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-x fa-xl"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-    <!--list3-->
-    <div class="col-md-12 mb-4">
-        <div class="card clickable-card" onclick="cardClicked()">
-            <img src="" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">Liste 3</h5>
-                <p class="card-text">test açıklama</p>
-            </div>
-        </div>
-    </div>
-</div>
+}
+
 
 @section Scripts {
     <script>
@@ -66,7 +54,7 @@
             // Kartın tıklandığında yapılacak işlemler buraya yazılır.
             // Örneğin, seçilen ürünün detay sayfasına yönlendirebilirsiniz.
             // window.location.href = "/Product/Detail/" + itemId;
-            window.location.href = "Inventory/Index";
+            window.location.href = "ShoppingListItem/List/" + itemId;
         }
     </script>
 }

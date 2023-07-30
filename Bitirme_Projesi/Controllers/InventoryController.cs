@@ -104,7 +104,7 @@ namespace Bitirme_Projesi.Controllers
             {
                 Categories = categories.Select(c => new SelectListItem
                 {
-                    Value = c.Id.ToString(),
+                    Value = c.CategoryID.ToString(),
                     Text = c.Name
                 }).ToList()
             };
@@ -135,7 +135,7 @@ namespace Bitirme_Projesi.Controllers
                     Name = productViewModel.Name,
                     Price = productViewModel.Price,
                     ImageFilePath = productViewModel.ImageFilePath,
-                    CategoryId = productViewModel.CategoryId
+                    CategoryID = productViewModel.CategoryId
                 };
 
                 _productBusiness.AddProduct(product);
@@ -160,14 +160,14 @@ namespace Bitirme_Projesi.Controllers
             var product = _productBusiness.GetProductWithCategory(id);
             var productViewModel = new ProductViewModel
             {
-                Id = product.Id,
+                Id = product.ProductID,
                 Name = product.Name,
                 Price = product.Price,
                 ImageFilePath = product.ImageFilePath,
-                CategoryId = product.CategoryId,
+                CategoryId = product.CategoryID,
                 Categories = categories.Select(c => new SelectListItem
                 {
-                    Value = c.Id.ToString(),
+                    Value = c.CategoryID.ToString(),
                     Text = c.Name
                 }).ToList()
             };
@@ -211,7 +211,7 @@ namespace Bitirme_Projesi.Controllers
                     product.Name = productViewModel.Name;
                     product.Price = productViewModel.Price;
                     product.ImageFilePath = productViewModel.ImageFilePath;
-                    product.CategoryId = productViewModel.CategoryId;
+                    product.CategoryID = productViewModel.CategoryId;
 
                     _productBusiness.UpdateProduct(product);
 
@@ -226,7 +226,7 @@ namespace Bitirme_Projesi.Controllers
             var categories = _categoryBusiness.GetAllCategories();
             productViewModel.Categories = categories.Select(c => new SelectListItem
             {
-                Value = c.Id.ToString(),
+                Value = c.CategoryID.ToString(),
                 Text = c.Name
             }).ToList();
             return View(productViewModel);

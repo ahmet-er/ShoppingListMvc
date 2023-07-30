@@ -24,6 +24,7 @@ builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
 builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
 builder.Services.AddScoped<IShoppingListBusiness, ShoppingListBusiness>();
 builder.Services.AddScoped<IShoppingListItemBusiness, ShoppingListItemBusiness>();
+builder.Services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

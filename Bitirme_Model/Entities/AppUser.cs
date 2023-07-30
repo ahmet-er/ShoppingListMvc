@@ -4,8 +4,12 @@ namespace Bitirme_Model.Entities
 {
     public class AppUser : IdentityUser
     {
-        public string? Name { get; set; }
-        public string? Surname { get; set; }
-        public List<ShoppingList>? ShoppingLists { get; set; }
+        public AppUser()
+        {
+            ShoppingLists = new HashSet<ShoppingList>();
+        }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public ICollection<ShoppingList>? ShoppingLists { get; set; }
     }
 }

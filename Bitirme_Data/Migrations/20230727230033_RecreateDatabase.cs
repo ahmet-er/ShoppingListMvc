@@ -31,14 +31,18 @@ namespace Bitirme_Projesi.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Name",
                 table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: true);
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "Surname",
                 table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: true);
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AlterColumn<string>(
                 name: "ProviderKey",
@@ -62,56 +66,56 @@ namespace Bitirme_Projesi.Data.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.CategoryID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ShoppingLists",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ShoppingListID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     AlisveriseCikildiMi = table.Column<bool>(type: "bit", nullable: false),
                     AlisverisTamamlandiMi = table.Column<bool>(type: "bit", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingLists", x => x.Id);
+                    table.PrimaryKey("PK_ShoppingLists", x => x.ShoppingListID);
                     table.ForeignKey(
-                        name: "FK_ShoppingLists_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_ShoppingLists_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ProductID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ImageFİlePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    ImageFilePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.ProductID);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Products_Categories_CategoryID",
+                        column: x => x.CategoryID,
                         principalTable: "Categories",
-                        principalColumn: "Id",
+                        principalColumn: "CategoryID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -119,35 +123,33 @@ namespace Bitirme_Projesi.Data.Migrations
                 name: "ShoppingListItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     ShoppingListId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Aldimi = table.Column<bool>(type: "bit", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingListItems", x => x.Id);
+                    table.PrimaryKey("PK_ShoppingListItems", x => new { x.ShoppingListId, x.ProductId });
                     table.ForeignKey(
                         name: "FK_ShoppingListItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
+                        principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShoppingListItems_ShoppingLists_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingLists",
-                        principalColumn: "Id",
+                        principalColumn: "ShoppingListID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId",
+                name: "IX_Products_CategoryID",
                 table: "Products",
-                column: "CategoryId");
+                column: "CategoryID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingListItems_ProductId",
@@ -155,14 +157,9 @@ namespace Bitirme_Projesi.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingListItems_ShoppingListId",
-                table: "ShoppingListItems",
-                column: "ShoppingListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingLists_UserId1",
+                name: "IX_ShoppingLists_UserID",
                 table: "ShoppingLists",
-                column: "UserId1");
+                column: "UserID");
         }
 
         /// <inheritdoc />

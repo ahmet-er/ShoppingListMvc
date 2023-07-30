@@ -1,0 +1,144 @@
+﻿@model List<ShoppingListProductViewModel>
+
+<div class="container">
+    <div class="row">
+        <!-- SEARCH BAR -->
+        <div class="col-md-12">
+            <div class="header-search">
+                <form class="row" id="searchForm">
+                    <div class="col-md-4">
+                        <select class="form-control" id="categorySelect">
+                            <option value="0">Tüm Kategoriler</option>
+                            @if (Model.Count > 0)
+                            {
+                                var categories = Model[0].Categories;
+                                foreach(var category in categories)
+                                {
+                                    <option value="@category.Value">@category.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input class="form-control" id="searchInput" placeholder="Ürün aramak için buraya yazın." />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Ara</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /SEARCH BAR -->
+    </div>
+
+    <div class="row mt-4" id="productList">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 product-card" data-category="@product.CategoryId">
+                <div class="card mb-4">
+                    <img src="@product.ImageFilePath" class="card-img-top" alt="" width="100%">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">@product.Name</h5>
+                            <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.CategoryName</div></div>
+                        </div>
+                        <p class="card-text">Fiyat: ₺@product.Price</p>
+                            @*<p class="card-text">Kategori: @product.CategoryId</p>*@
+
+                            <div class="d-flex justify-content-between">
+                                <!-- Normal div kullanarak input alanının boyutunu belirliyoruz -->
+                                <div class="input-group">
+                                    <div style="width: 60px;">
+                                        <input type="number" class="form-control" id="quantityInput_@product.ProductId" value="1" min="1" step="1">
+                                    </div>
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger" type="button" onclick="decreaseQuantity(@product.ProductId)"><i class="fa-solid fa-minus"></i></button>
+                                        <button class="btn btn-success" type="button" onclick="increaseQuantity(@product.ProductId)"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div>
+
+                                    <button class="btn btn-primary btn" onclick="addToCart(@product.ProductId)">
+                                        Ekle
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function increaseQuantity(productId) {
+            var inputElement = document.getElementById("quantityInput_" + productId);
+            var currentValue = parseInt(inputElement.value);
+            inputElement.value = currentValue + 1;
+        }
+
+        function decreaseQuantity(productId) {
+            var inputElement = document.getElementById("quantityInput_" + productId);
+            var currentValue = parseInt(inputElement.value);
+            if (currentValue > 1) {
+                inputElement.value = currentValue - 1;
+            }
+        }
+
+        function addToCart(productId) {
+            // Sepete ekleme işlemleri burada yapılır.
+            var quantityInput = document.getElementById("quantityInput_" + productId);
+            var quantity = parseInt(quantityInput.value);
+            // ... (Sepete ekleme kodları burada olacak) ...
+        }
+
+        // Kategori filtreleme
+        window.onload = function () {
+            var categorySelect = document.getElementById("categorySelect");
+
+            categorySelect.onchange = function () {
+                var selectedCategory = categorySelect.value;
+
+                var productCards = document.getElementsByClassName("product-card");
+
+                for (var i = 0; i < productCards.length; i++) {
+                    var productCategory = productCards[i].getAttribute("data-category");
+
+                    if (productCategory !== selectedCategory && selectedCategory !== "0") {
+                        productCards[i].style.display = "none";
+                    } else {
+                        productCards[i].style.display = "block";
+                    }
+                }
+            }
+        }
+
+        const productList = document.getElementById('productList');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const allProductCards = document.querySelectorAll('.product-card');
+
+        // Search işlemi
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategoryId = parseInt(categorySelect.value);
+
+            allProductCards.forEach((card) => {
+                const cardCategory = parseInt(card.dataset.category);
+                const cardTitle = card.querySelector('.card-title').textContent.toLowerCase();
+
+                if ((selectedCategoryId === 0 || cardCategory === selectedCategoryId) && cardTitle.includes(searchTerm)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+    </script>
+}
