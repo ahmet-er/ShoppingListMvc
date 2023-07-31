@@ -1,6 +1,7 @@
 ﻿using Bitirme_Data.Context;
 using Bitirme_Data.Repository.Interfaces;
 using Bitirme_Model.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bitirme_Data.Repository
 {
@@ -17,5 +18,6 @@ namespace Bitirme_Data.Repository
                 .Where(s => s.UserID == userId)
                 .ToList();
         }
+
     }
 }

@@ -12,7 +12,7 @@
                             @if (Model.Count > 0)
                             {
                                 var categories = Model[0].Categories;
-                                foreach(var category in categories)
+                                foreach (var category in categories)
                                 {
                                     <option value="@category.Value">@category.Text</option>
                                 }
@@ -31,10 +31,15 @@
         <!-- /SEARCH BAR -->
     </div>
 
+    @*Eklendi alert*@
+    <div class="alert alert-success mt-3" role="alert" id="successAlert" style="display: none;">
+        @*Ürün başarıyla listenize eklendi.*@
+    </div>
+
     <div class="row mt-4" id="productList">
         @foreach (var product in Model)
         {
-            <div class="col-md-4 product-card" data-category="@product.CategoryId">
+            <div class="col-md-3 product-card" data-category="@product.CategoryId">
                 <div class="card mb-4">
                     <img src="@product.ImageFilePath" class="card-img-top" alt="" width="100%">
                     <div class="card-body">
@@ -43,29 +48,28 @@
                             <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.CategoryName</div></div>
                         </div>
                         <p class="card-text">Fiyat: ₺@product.Price</p>
-                            @*<p class="card-text">Kategori: @product.CategoryId</p>*@
+                        @*<p class="card-text">Kategori: @product.CategoryId</p>*@
 
-                            <div class="d-flex justify-content-between">
-                                <!-- Normal div kullanarak input alanının boyutunu belirliyoruz -->
-                                <div class="input-group">
-                                    <div style="width: 60px;">
-                                        <input type="number" class="form-control" id="quantityInput_@product.ProductId" value="1" min="1" step="1">
-                                    </div>
-
-                                    <div class="input-group-append">
-                                        <button class="btn btn-danger" type="button" onclick="decreaseQuantity(@product.ProductId)"><i class="fa-solid fa-minus"></i></button>
-                                        <button class="btn btn-success" type="button" onclick="increaseQuantity(@product.ProductId)"><i class="fa-solid fa-plus"></i></button>
-                                    </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="input-group">
+                                <div style="width: 60px;">
+                                    <input type="number" class="form-control" id="quantityInput_@product.ProductId" value="1" min="1" step="1">
                                 </div>
-                                <div>
 
-                                    <button class="btn btn-primary btn" onclick="addToCart(@product.ProductId)">
-                                        Ekle
-                                    </button>
+                                <div class="input-group-append">
+                                    <button class="btn btn-danger" type="button" onclick="decreaseQuantity(@product.ProductId)"><i class="fa-solid fa-minus"></i></button>
+                                    <button class="btn btn-success" type="button" onclick="increaseQuantity(@product.ProductId)"><i class="fa-solid fa-plus"></i></button>
                                 </div>
+                            </div>
+                            <div>
+
+                                <button class="btn btn-primary addToCartBtn" onclick="addItemToList(@product.ProductId)">
+                                    Ekle
+                                </button>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         }
     </div>
@@ -87,12 +91,12 @@
             }
         }
 
-        function addToCart(productId) {
-            // Sepete ekleme işlemleri burada yapılır.
-            var quantityInput = document.getElementById("quantityInput_" + productId);
-            var quantity = parseInt(quantityInput.value);
-            // ... (Sepete ekleme kodları burada olacak) ...
-        }
+        //function addToCart(productId) {
+        //    // Sepete ekleme işlemleri burada yapılır.
+        //    var quantityInput = document.getElementById("quantityInput_" + productId);
+        //    var quantity = parseInt(quantityInput.value);
+        //    // ... (Sepete ekleme kodları burada olacak) ...
+        //}
 
         // Kategori filtreleme
         window.onload = function () {
@@ -137,6 +141,63 @@
                 } else {
                     card.style.display = "none";
                 }
+            });
+        });
+
+        // AddToList
+        function addItemToList(productId) {
+            var quantityInput = document.getElementById("quantityInput_" + productId);
+            var quantity = quantityInput.value;
+
+            var shoppingListId = getShoppingListIdFromUrl();
+
+            var data = {
+                ShoppingListId: shoppingListId,
+                ProductId: productId,
+                Amount: quantity
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/ShoppingListItem/AddToList',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log('Ürün başarıyla eklendi');
+                    if (response.success) {
+                        var successAlert = document.getElementById('successAlert');
+                        successAlert.innerHTML = response.message;
+                        successAlert.style.display = 'block';
+                        setTimeout(function () {
+                            successAlert.style.display = 'none';
+                        }, 2000); 
+                    } else {
+                        alert("Hata oluştu: " + response.message);
+                    }
+                },
+                error: function () {
+                    console.log('Bir hata oluştu');
+                }
+            });
+        }
+
+        function getShoppingListIdFromUrl() {
+            var url = window.location.href;
+            var urlParts = url.split("/");
+            var listIdIndex = urlParts.indexOf("List");
+            if (listIdIndex !== -1 && listIdIndex + 1 < urlParts.length) {
+                var shoppingListId = parseInt(urlParts[listIdIndex + 1]);
+                if (!isNaN(shoppingListId)) {
+                    return shoppingListId;
+                }
+            }
+            return null;
+        }
+
+        $(document).ready(function () {
+            $('.addToCardBtn').click(function () {
+                var productId = $(this).closest(".product-card").data('productid');
+                addItemToList(productId);
             });
         });
 

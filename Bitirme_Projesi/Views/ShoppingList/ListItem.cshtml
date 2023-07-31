@@ -1,0 +1,84 @@
+﻿@model ShoppingListViewModel
+
+<h1>@Model.Name</h1>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" id="completedCheckbox" @(Model.IsCompleted ? "checked" : "")>
+    <label class="form-check-label" for="completedCheckbox">
+        Alışveriş Tamamlandı
+    </label>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Ürün Resmi</th>
+            <th scope="col">Ürün Adı</th>
+            <th scope="col">Miktar</th>
+            <th scope="col">Aldım</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ShoppingListItems)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ImageFilePath" width="60" height="60"/>
+                </td>
+                <td>@item.ProductName</td>
+                <td>@item.Amount</td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input item-purchased-checkbox" type="checkbox" data-shoppingListId="@Model.ShoppingListID" data-productId="@item.ProductId" @(item.Aldimi ? "checked" : "")>
+                        <label class="form-check-label" for="purchasedCheckbox">
+                            Aldım
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Alışveriş Tamamlandı checkbox'ı değiştiğinde "CompleteShopping" action'ına gönder.
+            $("#completedCheckbox").change(function () {
+                if ($(this).prop("checked")) {
+                    var shoppingListId = @Model.ShoppingListID;
+                    $.post("/ShoppingList/CompleteShopping", { shoppingListId: shoppingListId }, function (data) {
+                        window.location.reload();
+                    });
+                }
+            });
+
+            // Aldım checkbox'ları değiştiğinde "UpdateItemStatus" action'ına gönder.
+            $(".item-purchased-checkbox").change(function () {
+                var shoppingListId = $(this).data("shoppinglistid");
+                var productId = $(this).data("productid");
+                var isPurchased = $(this).prop("checked");
+
+                $.post("/ShoppingList/UpdateItemStatus", { shoppingListId: shoppingListId, productId: productId, isPurchased: isPurchased }, function (data) {
+                    // Başarılı alert göster
+                    showAlert("Ürün durumu güncellendi.", "success");
+                }).fail(function (error) {
+                    // Hata alert göster
+                    showAlert("Hata oluştu: " + error.responseText, "danger");
+                });
+            });
+
+            // Alert'leri gizleyen fonksiyon
+            function showAlert(message, type) {
+                var alert = $("<div class='alert alert-" + type + "' role='alert'>" + message + "</div>").appendTo("body");
+                alert.fadeIn();
+                setTimeout(function () {
+                    alert.fadeOut(function () {
+                        alert.remove();
+                    });
+                }, 3000);
+            }
+        });
+    </script>
+}
+

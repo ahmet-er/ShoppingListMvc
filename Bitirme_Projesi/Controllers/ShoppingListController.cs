@@ -9,10 +9,14 @@ namespace Bitirme_Projesi.Controllers
     public class ShoppingListController : Controller
     {
         private readonly IShoppingListBusiness _shoppingListBusiness;
+        private readonly IShoppingListItemBusiness _shoppingListItemBusiness;
+        private readonly IProductBusiness _productBusiness;
 
-        public ShoppingListController(IShoppingListBusiness shoppingListBusiness)
+        public ShoppingListController(IShoppingListBusiness shoppingListBusiness, IShoppingListItemBusiness shoppingListItemBusiness, IProductBusiness productBusiness)
         {
             _shoppingListBusiness = shoppingListBusiness;
+            _shoppingListItemBusiness = shoppingListItemBusiness;
+            _productBusiness = productBusiness;
         }
         public IActionResult Index()
         {
@@ -97,6 +101,40 @@ namespace Bitirme_Projesi.Controllers
         {
             _shoppingListBusiness.DeleteShoppingList(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ListItem(int id)
+        {
+            var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
+            var shoppingListItems = _shoppingListItemBusiness.GetItemsByShoppingListId(id);
+
+            foreach(var shoppingListItem in shoppingListItems)
+            {
+                shoppingListItem.Product = _productBusiness.GetProductWithCategory(shoppingListItem.ProductId);
+            }
+
+            if (shoppingListItems == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var shoppingListViewModel = new ShoppingListViewModel
+            {
+                ShoppingListID = shoppingList.ShoppingListID,
+                Name = shoppingList.Name,
+                IsCompleted = false,
+                ShoppingListItems = shoppingListItems.Select(sli => new ShoppingListItemViewModel
+                {
+                    ShoppingListId = sli.ShoppingListId,
+                    ProductId = sli.ProductId,
+                    ProductName = sli.Product.Name,
+                    Description = sli.Description,
+                    ImageFilePath = sli.Product.ImageFilePath,
+                    Aldimi = sli.Aldimi,
+                    Amount = sli.Amount
+                }).ToList()
+            };
+            return View(shoppingListViewModel);
         }
     }
 }

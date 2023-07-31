@@ -1,4 +1,5 @@
 ﻿using Bitirme_Business.Interfaces;
+using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,11 +11,14 @@ namespace Bitirme_Projesi.Controllers
         private readonly IShoppingListBusiness _shoppingListBusiness;
         private readonly IProductBusiness _productBusiness;
         private readonly ICategoryBusiness _categoryBusiness;
-        public ShoppingListItemController(IShoppingListBusiness shoppingListBusiness, IProductBusiness productBusiness, ICategoryBusiness categoryBusiness)
+        private readonly IShoppingListItemBusiness _shoppingListItemBusiness;
+        public ShoppingListItemController(IShoppingListBusiness shoppingListBusiness, IProductBusiness productBusiness, ICategoryBusiness categoryBusiness, IShoppingListItemBusiness shoppingListItemBusiness)
         {
             _shoppingListBusiness = shoppingListBusiness;
             _productBusiness = productBusiness;
             _categoryBusiness = categoryBusiness;
+            _shoppingListItemBusiness = shoppingListItemBusiness;
+
         }
         public IActionResult List(int id)
         {
@@ -48,9 +52,30 @@ namespace Bitirme_Projesi.Controllers
 
             return View(productViewModels);
         }
-        public IActionResult Create()
+        [HttpPost]
+        public IActionResult AddToList([FromBody] ShoppingListItemViewModel model)
         {
-            return View();
+            if(ModelState.IsValid)
+            {
+                ShoppingListItem newItem = new ShoppingListItem
+                {
+                    ShoppingListId = model.ShoppingListId,
+                    ProductId = model.ProductId,
+                    Amount = model.Amount
+                };
+
+                try
+                {
+                    _shoppingListItemBusiness.AddShoppingListItem(newItem);
+                    return Json(new { success = true, message = "Ürün başarıyla listenize eklendi." });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = true, message = "Hata oluştu: " + ex.Message });
+                }
+            }
+            var errorMessages = ModelState.Values.SelectMany(a => a.Errors.Select(e => e.ErrorMessage));
+            return Json(new { success = false, message = "Hata oluştu: " + string.Join(" | ", errorMessages) });
         }
     }
 }

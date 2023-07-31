@@ -9,5 +9,6 @@ namespace Bitirme_Business.Interfaces
         void AddShoppingListItem(ShoppingListItem shoppingListItem);
         void UpdateShoppingListItem(ShoppingListItem shoppingListItem);
         void DeleteShoppingListItem(int shoppingListItemId);
+        List<ShoppingListItem> GetItemsByShoppingListId(int shoppingListItemId); 
     }
 }

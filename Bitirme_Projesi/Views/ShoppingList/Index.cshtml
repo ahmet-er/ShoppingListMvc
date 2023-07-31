@@ -38,6 +38,10 @@ else
                                     <a type="button" class="btn btn-light mb-2" asp-controller="ShoppingList" asp-action="EditList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-regular fa-pen-to-square fa-xl"></i></a>
                                     <a type="button" class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-x fa-xl"></i></a>
                                 </div>
+                                <div class="row">
+                                    <a type="button" class="btn btn-light mb-2 mt-2" asp-controller="ShoppingList" asp-action="ListItem" asp-route-id="@shoppingList.ShoppingListID">list item</a>
+                                    <a type="button" class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@shoppingList.ShoppingListID">test</a>
+                                </div>
                             </div>
                         </div>
                     </div>
