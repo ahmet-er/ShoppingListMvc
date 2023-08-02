@@ -3,6 +3,7 @@ using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using X.PagedList;
 
 namespace Bitirme_Projesi.Controllers
 {
@@ -19,17 +20,25 @@ namespace Bitirme_Projesi.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? pageCategories, int? pageProducts)
         {
+            int pageCategorySize = 10;
+            int pageProductSize = 4;
+
             ViewData["Title"] = "Envanter Yönetimi";
 
-            var products = _productBusiness.GetAllProducts();
             var categories = _categoryBusiness.GetAllCategories();
+            var products = _productBusiness.GetAllProducts();
+
+            
+
+            var pagedCategories = categories.ToPagedList(pageCategories ?? 1, pageCategorySize);
+            var pagedProducts = products.ToPagedList(pageProducts ?? 1, pageProductSize);
 
             var inventoryViewModel = new InventoryViewModel
             {
-                Categories = categories,
-                Products = products
+                Categories = pagedCategories,
+                Products = pagedProducts
             };
 
             return View(inventoryViewModel);

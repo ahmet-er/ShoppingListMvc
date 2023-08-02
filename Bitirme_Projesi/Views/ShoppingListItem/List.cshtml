@@ -1,4 +1,8 @@
-﻿@model List<ShoppingListProductViewModel>
+﻿@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+<link href="~/css/PagedList.css" rel="stylesheet" />
+@model IPagedList<ShoppingListProductViewModel>
 
 <div class="container">
     <div class="row">
@@ -20,10 +24,11 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <input class="form-control" id="searchInput" placeholder="Ürün aramak için buraya yazın." />
+                        <input class="form-control" id="searchInput" name="search" placeholder="Ürün aramak için buraya yazın." />
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Ara</button>
+                        <button class="btn btn-primary" id="searchButton" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Ara</button>
+                        <button class="btn btn-dark" id="resetButton"><i class="fa-solid fa-rotate-left"></i></button>
                     </div>
                 </form>
             </div>
@@ -48,7 +53,6 @@
                             <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.CategoryName</div></div>
                         </div>
                         <p class="card-text">Fiyat: ₺@product.Price</p>
-                        @*<p class="card-text">Kategori: @product.CategoryId</p>*@
 
                         <div class="d-flex justify-content-between">
                             <div class="input-group">
@@ -72,11 +76,30 @@
                 </div>
             </div>
         }
+    <div class="pagination">
+        @if (Model.PageCount > 0)
+        {
+            <p>
+                Gösterilen Ürünler: @((Model.PageNumber - 1) * Model.PageSize + 1) -
+                @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)
+                / @Model.TotalItemCount
+            </p>
+        }
+
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { id = @ViewContext.RouteData.Values["id"], page }))
+    </div>
+
     </div>
 </div>
 
 @section Scripts {
     <script>
+        const productList = document.getElementById('productList');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const allProductCards = document.querySelectorAll('.product-card');
+
         function increaseQuantity(productId) {
             var inputElement = document.getElementById("quantityInput_" + productId);
             var currentValue = parseInt(inputElement.value);
@@ -91,58 +114,57 @@
             }
         }
 
-        //function addToCart(productId) {
-        //    // Sepete ekleme işlemleri burada yapılır.
-        //    var quantityInput = document.getElementById("quantityInput_" + productId);
-        //    var quantity = parseInt(quantityInput.value);
-        //    // ... (Sepete ekleme kodları burada olacak) ...
-        //}
-
-        // Kategori filtreleme
-        window.onload = function () {
-            var categorySelect = document.getElementById("categorySelect");
-
-            categorySelect.onchange = function () {
-                var selectedCategory = categorySelect.value;
-
-                var productCards = document.getElementsByClassName("product-card");
-
-                for (var i = 0; i < productCards.length; i++) {
-                    var productCategory = productCards[i].getAttribute("data-category");
-
-                    if (productCategory !== selectedCategory && selectedCategory !== "0") {
-                        productCards[i].style.display = "none";
-                    } else {
-                        productCards[i].style.display = "block";
-                    }
-                }
-            }
-        }
-
-        const productList = document.getElementById('productList');
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
-        const categorySelect = document.getElementById('categorySelect');
-        const allProductCards = document.querySelectorAll('.product-card');
-
-        // Search işlemi
-        searchForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategoryId = parseInt(categorySelect.value);
-
-            allProductCards.forEach((card) => {
-                const cardCategory = parseInt(card.dataset.category);
-                const cardTitle = card.querySelector('.card-title').textContent.toLowerCase();
-
-                if ((selectedCategoryId === 0 || cardCategory === selectedCategoryId) && cardTitle.includes(searchTerm)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
+        // pagedlist sonrası güncel search
+        $(document).ready(function () {
+            $("#categorySelect").change(function () {
+                filterAndLoadProducts();
             });
+
+            $("#searchButton").click(function () {
+                filterAndLoadProducts();
+            });
+
+            $("#resetButton").click(function () {
+                resetFilters();
+            });
+
+            function filterAndLoadProducts() {
+                var searchTerm = $("#searchInput").val();
+                var selectedCategory = $("#categorySelect").val();
+                var url = '@Url.Action("List", "ShoppingListItem")';
+
+                if (selectedCategory != null && selectedCategory !== "0") {
+                    url += "?category=" + encodeURIComponent(selectedCategory);
+                }
+
+                if (searchTerm) {
+                    url += url.indexOf("?") === -1 ? "?" : "&";
+                    url += "search=" + encodeURIComponent(searchTerm);
+                }
+
+                window.location.href = url;
+            }
+
+            function resetFilters() {
+                var url = '@Url.Action("List", "ShoppingListItem")';
+
+                window.location.href = url;
+            }
         });
+
+        // search reset button
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    var resetButton = document.getElementById("resetButton");
+        //    resetButton.addEventListener("click", function (e) {
+        //        e.preventDefault();
+
+        //        categorySelect.value = "0";
+        //        searchInput.value = "";
+
+        //        document.getElementById("searchForm").submit();
+        //    })
+        //});
+
 
         // AddToList
         function addItemToList(productId) {
@@ -170,7 +192,7 @@
                         successAlert.style.display = 'block';
                         setTimeout(function () {
                             successAlert.style.display = 'none';
-                        }, 2000); 
+                        }, 2000);
                     } else {
                         alert("Hata oluştu: " + response.message);
                     }

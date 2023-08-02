@@ -11,6 +11,6 @@ namespace Bitirme_Model.ViewModels
         public int ShoppingListID { get; set; }
         public string Name { get; set; }
         public bool IsCompleted { get; set; }
-        public List<ShoppingListItemViewModel> ShoppingListItems { get; set; }
+        public List<ShoppingListItemViewModel>? ShoppingListItems { get; set; }
     }
 }

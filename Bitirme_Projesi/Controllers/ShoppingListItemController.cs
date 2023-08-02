@@ -3,6 +3,7 @@ using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using X.PagedList;
 
 namespace Bitirme_Projesi.Controllers
 {
@@ -20,8 +21,11 @@ namespace Bitirme_Projesi.Controllers
             _shoppingListItemBusiness = shoppingListItemBusiness;
 
         }
-        public IActionResult List(int id)
+        public IActionResult List(int id, int page = 1, string search = "", int? category = null)
         {
+            ViewData["Title"] = "Liste'ye Ürün Ekle";
+
+            int pageProductSize = 8;
             var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
             if (shoppingList == null)
             {
@@ -31,7 +35,19 @@ namespace Bitirme_Projesi.Controllers
             var products = _productBusiness.GetAllProducts();
             var categories = _categoryBusiness.GetAllCategories();
             var categoriesToDic = categories.ToDictionary(c => c.CategoryID, c => c.Name);
-            
+
+
+            // Search 
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p => p.Name.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            // Category filtre
+            if (category.HasValue && category > 0)
+            {
+                products = products.Where(p => p.CategoryID == category).ToList();
+            }
 
             var productViewModels = products.Select(p => new ShoppingListProductViewModel
             {
@@ -46,12 +62,12 @@ namespace Bitirme_Projesi.Controllers
                     Value = c.CategoryID.ToString(),
                     Text = c.Name
                 }).ToList()
-            }).ToList();
-
-            //ViewBag.Categories = new SelectList(categories.ToList(), "CategoryId", "CategoryName");
+            }).ToPagedList(page, pageProductSize);
 
             return View(productViewModels);
         }
+
+
         [HttpPost]
         public IActionResult AddToList([FromBody] ShoppingListItemViewModel model)
         {

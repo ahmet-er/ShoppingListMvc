@@ -1,10 +1,11 @@
 ﻿using Bitirme_Model.Entities;
+using X.PagedList;
 
 namespace Bitirme_Model.ViewModels
 {
     public class InventoryViewModel
     {
-        public List<Category>? Categories { get; set; }
-        public List<Product>? Products { get; set; }
+        public IPagedList<Category>? Categories { get; set; }
+        public IPagedList<Product>? Products { get; set; }
     }
 }

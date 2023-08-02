@@ -30,7 +30,9 @@
 
                 <div class="form-group mb-3">
                     <label asp-for="CategoryId" class="control-label">Kategori</label>
-                    <select asp-for="CategoryId" asp-items="@Model.Categories" class="form-control"></select>
+                    <select asp-for="CategoryId" asp-items="@Model.Categories" class="form-control">
+                        <option value="0">Tüm Kategoriler</option>
+                    </select>
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             }

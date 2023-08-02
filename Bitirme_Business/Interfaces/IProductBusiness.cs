@@ -1,4 +1,5 @@
 ﻿using Bitirme_Model.Entities;
+using X.PagedList;
 
 namespace Bitirme_Business.Interfaces
 {

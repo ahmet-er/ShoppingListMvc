@@ -20,6 +20,8 @@ namespace Bitirme_Projesi.Controllers
         }
         public IActionResult Index()
         {
+            ViewData["Title"] = "Listeler";
+
             var currentUser = HttpContext.User;
             var userIdClaim = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 

@@ -2,6 +2,7 @@
 using Bitirme_Data.Repository.Interfaces;
 using Bitirme_Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace Bitirme_Business.Business
 {
