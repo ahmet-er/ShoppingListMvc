@@ -1,0 +1,43 @@
+﻿@model ShoppingListItemViewModel
+
+<div class="row">
+    <div class="col">
+        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-tags"></i> | @Model.ProductName Ürün Detayını Güncelle</span></h3>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-6">
+        <form asp-controller="ShoppingListItem" asp-action="EditShoppingListItem" method="post">
+            <input type="hidden" name="ShoppingListId" value="@Model.ShoppingListId" />
+            <input type="hidden" name="ProductId" value="@Model.ProductId" />
+
+            <div class="form-group mb-2">
+                <label asp-for="Amount" class="control-label">Ürün Miktarı</label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="Description" class="control-label">Ürün Açıklaması</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" name="ProductName" value="@Model.ProductName" />
+            <input type="hidden" name="ImageFilePath" value="@Model.ImageFilePath" />
+            <input type="hidden" name="Aldimi" value="false" />
+
+            <div class="form-group">
+                <input type="submit" value="Ürünü Güncelle" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-6 text-center">
+        @if (!string.IsNullOrEmpty(Model.ImageFilePath))
+        {
+            <img src="@Model.ImageFilePath" width="300" height="300" />
+        }
+    </div>
+</div>

@@ -71,7 +71,7 @@ namespace Bitirme_Projesi.Controllers
         [HttpPost]
         public IActionResult AddToList([FromBody] ShoppingListItemViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 ShoppingListItem newItem = new ShoppingListItem
                 {
@@ -92,6 +92,72 @@ namespace Bitirme_Projesi.Controllers
             }
             var errorMessages = ModelState.Values.SelectMany(a => a.Errors.Select(e => e.ErrorMessage));
             return Json(new { success = false, message = "Hata oluştu: " + string.Join(" | ", errorMessages) });
+        }
+
+        [HttpGet]
+        public IActionResult EditShoppingListItem(int shoppingListId, int productId)
+        {
+            var shoppingListItem = _shoppingListItemBusiness.GetShoppingListItemByShoppingListIdAndProductId(shoppingListId, productId);
+            var shoppingList = _shoppingListBusiness.GetShoppingListById(shoppingListId);
+            var product = _productBusiness.GetProductWithCategory(productId);
+
+            if (shoppingListItem == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ShoppingListItemViewModel
+            {
+                ShoppingListId = shoppingListId,
+                ProductId = shoppingListItem.ProductId,
+                ProductName = shoppingListItem.Product.Name,
+                ImageFilePath = shoppingListItem.Product.ImageFilePath,
+                Amount = shoppingListItem.Amount,
+                Description = shoppingListItem.Description,
+                Aldimi = false
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditShoppingListItem(ShoppingListItemViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var shoppingListItem = _shoppingListItemBusiness.GetShoppingListItemByShoppingListIdAndProductId(model.ShoppingListId, model.ProductId);
+
+                if (shoppingListItem != null)
+                {
+                    shoppingListItem.Amount = model.Amount;
+                    shoppingListItem.Description = model.Description;
+
+                    _shoppingListItemBusiness.UpdateShoppingListItem(shoppingListItem);
+
+                    return RedirectToAction("ListItem", "ShoppingList", new { id = model.ShoppingListId });
+                }
+                else
+                {
+                    ModelState.AddModelError("NotFound", "Belirtilen ürün bulunamadı.");
+                }
+            }
+            return View(model);
+        }
+
+        public IActionResult DeleteShoppingListItem(int shoppingListId, int productId)
+        {
+            var shoppingListItem = _shoppingListItemBusiness.GetShoppingListItemByShoppingListIdAndProductId(shoppingListId, productId);
+
+            if (shoppingListItem != null)
+            {
+                _shoppingListItemBusiness.DeleteShoppingListItem(shoppingListItem);
+
+                return RedirectToAction("ListItem", "ShoppingList", new { id = shoppingListId });
+            }
+            else
+            {
+                return NotFound("Seçili ürün bulunamadı.");
+            }
         }
     }
 }

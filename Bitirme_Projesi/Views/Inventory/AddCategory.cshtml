@@ -1,4 +1,5 @@
 ﻿@model CategoryViewModel
+@using Bitirme_Projesi.Extensions;
 
 <div class="row">
     <div class="col">
@@ -7,9 +8,11 @@
 </div>
 <hr />
 
+
+
 <div class="row">
     <div class="col-6">
-        <form asp-controller="Inventory" asp-action="AddCategory" method="post">
+        <form asp-controller="Inventory" asp-action="AddCategory" method="post" class="mb-5">
             <div class="form-group mb-2">
                 <label asp-for="Name" class="control-label">Kategori Adı</label>
                 <input asp-for="Name" class="form-control" />
@@ -20,5 +23,7 @@
                 <input type="submit" value="Kategori Ekle" class="btn btn-primary" />
             </div>
         </form>
+
+        @await Html.PartialAsync("_ValidationSummary", ViewData.ModelState.GetErrorMessages())
     </div>
 </div>

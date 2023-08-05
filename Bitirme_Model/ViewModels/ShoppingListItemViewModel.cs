@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Bitirme_Model.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Bitirme_Model.ViewModels
 {
@@ -11,6 +12,5 @@ namespace Bitirme_Model.ViewModels
         public string? Description { get; set; }
         public bool Aldimi { get; set; }
         public int Amount { get; set; }
-        //public List<SelectListItem> ProductList { get; set; }
     }
 }

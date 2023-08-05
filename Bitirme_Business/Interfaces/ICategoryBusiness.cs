@@ -9,5 +9,6 @@ namespace Bitirme_Business.Interfaces
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(int categoryId);
+        bool CategoryExists(string categoryName);
     }
 }

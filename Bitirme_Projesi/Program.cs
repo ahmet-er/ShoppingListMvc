@@ -54,6 +54,11 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "editShoppingListItem",
+    pattern: "ShoppingListItem/EditShoppingListItem/{sId}/{pId}",
+    defaults: new { controller = "ShoppingListItem", action = "EditShoppingListItem" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();

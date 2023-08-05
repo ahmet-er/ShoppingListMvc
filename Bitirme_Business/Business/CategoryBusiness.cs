@@ -18,6 +18,11 @@ namespace Bitirme_Business.Business
             _categoryRepo.Add(category);
         }
 
+        public bool CategoryExists(string categoryName)
+        {
+            return _categoryRepo.GetAll().Any(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public void DeleteCategory(int categoryId)
         {
             var category = _categoryRepo.GetById(categoryId);

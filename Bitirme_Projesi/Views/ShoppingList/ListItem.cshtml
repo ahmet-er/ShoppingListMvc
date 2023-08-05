@@ -1,47 +1,125 @@
 ﻿@model ShoppingListViewModel
 
-<h1>@Model.Name</h1>
+<div class="row" id="rowToColContainer">
+    <div class="col">
+        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-cart-shopping"></i> | @Model.Name</span></h3>
+    </div>
 
-<div class="form-check">
-    <input class="form-check-input" type="checkbox" id="completedCheckbox" @(Model.IsCompleted ? "checked" : "")>
-    <label class="form-check-label" for="completedCheckbox">
-        Alışveriş Tamamlandı
-    </label>
+    <div class="col-auto" id="goShoppingCheckboxContainer">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="goShoppingCheckBox">
+            <label class="form-check-label" for="goShoppingCheckbox">
+                Alışverişe Başla
+            </label>
+        </div>
+    </div>
+    <div class="col-auto" id="completedCheckboxContainer" style="display: none;">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="completedCheckBox" @(Model.IsCompleted ? "checked" : "")>
+            <label class="form-check-label" for="completedCheckbox">
+                Alışveriş Tamamlandı
+            </label>
+        </div>
+    </div>
+    <div class="col-auto">
+        <div>
+            <a class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@Model.ShoppingListID">
+                <i class="fa-regular fa-trash-can"></i>
+            </a>
+            <a class="btn btn-dark" asp-controller="ShoppingListItem" asp-action="List" asp-route-id="@Model.ShoppingListID">
+                <i class="fa-solid fa-plus"></i>
+            </a>
+        </div>
+    </div>
 </div>
+<hr />
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Ürün Resmi</th>
-            <th scope="col">Ürün Adı</th>
-            <th scope="col">Miktar</th>
-            <th scope="col">Aldım</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ShoppingListItems)
-        {
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
             <tr>
-                <td>
-                    <img src="@item.ImageFilePath" width="60" height="60"/>
-                </td>
-                <td>@item.ProductName</td>
-                <td>@item.Amount</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input item-purchased-checkbox" type="checkbox" data-shoppingListId="@Model.ShoppingListID" data-productId="@item.ProductId" @(item.Aldimi ? "checked" : "")>
-                        <label class="form-check-label" for="purchasedCheckbox">
-                            Aldım
-                        </label>
-                    </div>
-                </td>
+                <th scope="col">Ürün Resmi</th>
+                <th scope="col">Ürün Adı</th>
+                <th scope="col">Miktar</th>
+                <th scope="col">Açıklama</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ShoppingListItems)
+            {
+                <tr class="row-select">
+                    <td>
+                        <img src="@item.ImageFilePath" width="60" height="60" />
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>@item.Amount</td>
+                    <td>@item.Description</td>
+
+                    <td>
+                        <a class="text-primary"
+                           asp-controller="ShoppingListItem"
+                           asp-action="EditShoppingListItem"
+                           asp-route-shoppingListId="@Model.ShoppingListID"
+                           asp-route-productId="@item.ProductId">
+                            <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a class="text-danger"
+                           asp-controller="ShoppingListItem"
+                           asp-action="DeleteShoppingListItem"
+                           asp-route-shoppingListId="@Model.ShoppingListID"
+                           asp-route-productId="@item.ProductId">
+                            <i class="fa-regular fa-trash-can fa-xl"></i>
+                        </a>
+                    </td>
+
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input item-purchased-checkbox" type="checkbox" data-shoppingListId="@Model.ShoppingListID" data-productId="@item.ProductId" @(item.Aldimi ? "checked" : "")>
+                            <label class="form-check-label">
+                                Aldım
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var goShoppingCheckBox = document.getElementById("goShoppingCheckBox");
+                var completedCheckBox = document.getElementById("completedCheckBox");
+                var completedCheckboxContainer = document.getElementById("completedCheckboxContainer");
+                var goShoppingCheckboxContainer = document.getElementById("goShoppingCheckboxContainer");
+
+                goShoppingCheckBox.addEventListener("change", function () {
+                    if (goShoppingCheckBox.checked) {
+                        completedCheckboxContainer.style.display = "block";
+                        goShoppingCheckboxContainer.style.display = "none";
+                        completedCheckBox.checked = false;
+                    } else {
+                        completedCheckboxContainer.style.display = "none";
+                    }
+                });
+                completedCheckBox.addEventListener("change", function () {
+                    if (completedCheckBox.checked) {
+                        completedCheckboxContainer.style.display = "none";
+                        goShoppingCheckboxContainer.style.display = "block";
+                        goShoppingCheckBox.checked = false;
+                    } else {
+
+                    }
+                });
+            });
+
         $(document).ready(function () {
             // Alışveriş Tamamlandı checkbox'ı değiştiğinde "CompleteShopping" action'ına gönder.
             $("#completedCheckbox").change(function () {
@@ -78,6 +156,13 @@
                     });
                 }, 3000);
             }
+        });
+
+        $(document).ready(function () {
+            $('.row-select').on('click', function () {
+                var checkbox = $(this).find('.item-purchased-checkbox');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            });
         });
     </script>
 }

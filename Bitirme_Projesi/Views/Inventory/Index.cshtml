@@ -36,17 +36,17 @@
                     @foreach (var category in Model.Categories)
                     {
                         <tr>
-                            <th>@category.Name</th>
-                            <th>
+                            <td>@category.Name</td>
+                            <td>
                                 <a class="text-primary" asp-controller="Inventory" asp-action="UpdateCategory" asp-route-id="@category.CategoryID">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 <a class="text-danger" asp-action="DeleteCategory" asp-controller="Inventory" asp-route-id="@category.CategoryID">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </a>
-                            </th>
+                            </td>
                         </tr>
                     }
                 </tbody>

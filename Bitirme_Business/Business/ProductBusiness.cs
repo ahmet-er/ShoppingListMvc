@@ -43,6 +43,11 @@ namespace Bitirme_Business.Business
             return product;
         }
 
+        public bool ProductExists(string productName)
+        {
+            return _productRepo.GetAll().Any(p => p.Name.Equals(productName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public void UpdateProduct(Product product)
         {
             _productRepo.Update(product);

@@ -1,6 +1,7 @@
 ﻿@using X.PagedList;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList.Web.Common;
+@using Bitirme_Projesi.Extensions
 <link href="~/css/PagedList.css" rel="stylesheet" />
 @model IPagedList<ShoppingListProductViewModel>
 
@@ -29,6 +30,7 @@
                     <div class="col-md-2">
                         <button class="btn btn-primary" id="searchButton" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Ara</button>
                         <button class="btn btn-dark" id="resetButton"><i class="fa-solid fa-rotate-left"></i></button>
+                        <a type="button" class="btn btn-success" asp-controller="ShoppingList" asp-action="ListItem" asp-route-id="@ViewContext.RouteData.Values["id"]"><i class="fa-solid fa-cart-shopping"></i></a>
                     </div>
                 </form>
             </div>
@@ -76,18 +78,19 @@
                 </div>
             </div>
         }
-    <div class="pagination">
-        @if (Model.PageCount > 0)
-        {
-            <p>
-                Gösterilen Ürünler: @((Model.PageNumber - 1) * Model.PageSize + 1) -
-                @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)
-                / @Model.TotalItemCount
-            </p>
-        }
 
-        @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { id = @ViewContext.RouteData.Values["id"], page }))
-    </div>
+        <div class="pagination">
+            @if (Model.PageCount > 0)
+            {
+                <p>
+                    Gösterilen Ürünler: @((Model.PageNumber - 1) * Model.PageSize + 1)  -
+                    @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)
+                    / @Model.TotalItemCount
+                </p>
+            }
+
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action("List", new { id = @ViewContext.RouteData.Values["id"], page }))
+        </div>
 
     </div>
 </div>
@@ -152,26 +155,12 @@
             }
         });
 
-        // search reset button
-        //document.addEventListener("DOMContentLoaded", function () {
-        //    var resetButton = document.getElementById("resetButton");
-        //    resetButton.addEventListener("click", function (e) {
-        //        e.preventDefault();
-
-        //        categorySelect.value = "0";
-        //        searchInput.value = "";
-
-        //        document.getElementById("searchForm").submit();
-        //    })
-        //});
-
-
         // AddToList
         function addItemToList(productId) {
             var quantityInput = document.getElementById("quantityInput_" + productId);
             var quantity = quantityInput.value;
 
-            var shoppingListId = getShoppingListIdFromUrl();
+            var shoppingListId = @ViewContext.RouteData.Values["id"];
 
             var data = {
                 ShoppingListId: shoppingListId,
@@ -201,19 +190,6 @@
                     console.log('Bir hata oluştu');
                 }
             });
-        }
-
-        function getShoppingListIdFromUrl() {
-            var url = window.location.href;
-            var urlParts = url.split("/");
-            var listIdIndex = urlParts.indexOf("List");
-            if (listIdIndex !== -1 && listIdIndex + 1 < urlParts.length) {
-                var shoppingListId = parseInt(urlParts[listIdIndex + 1]);
-                if (!isNaN(shoppingListId)) {
-                    return shoppingListId;
-                }
-            }
-            return null;
         }
 
         $(document).ready(function () {

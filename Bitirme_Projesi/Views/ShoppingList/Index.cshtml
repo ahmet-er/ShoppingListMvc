@@ -1,4 +1,8 @@
-﻿@model List<ShoppingList>
+﻿@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+<link href="~/css/PagedList.css" rel="stylesheet" />
+@model IPagedList<ShoppingList>
 
 <div class="row">
     <div class="col">
@@ -19,42 +23,51 @@
 }
 else
 {
-    <div class="row">
-        @foreach (var shoppingList in Model)
-        {
-            <div class="col-md-12 mb-4">
-                <div class="card bg-card text-light" onclick="cardClicked(@shoppingList.ShoppingListID)">
-                    <img src="" class="card-img-top" alt="">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="card-body hand-card clickable-card">
-                                <h4 class="card-title">@shoppingList.Name</h4>
-                                @*<p class="card-text">test açıklama</p>*@
-                            </div>
+<div class="row">
+    @foreach (var shoppingList in Model)
+    {
+        <div class="col-md-12 mb-4">
+            <div class="card bg-card text-light" onclick="cardClicked(@shoppingList.ShoppingListID)">
+                <img src="" class="card-img-top" alt="">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="card-body hand-card clickable-card">
+                            <h4 class="card-title">@shoppingList.Name</h4>
+                            @*<p class="card-text">test açıklama</p>*@
                         </div>
-                        <div class="col-md-2 p-3">
-                            <div class="card-footer text-right bg-transparent">
-                                <div class="row">
-                                    <a type="button" class="btn btn-dark mb-2 mt-2" asp-controller="ShoppingList" asp-action="ListItem" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-cart-shopping fa-xl"></i></a>
-                                    <a type="button" class="btn btn-light mb-2" asp-controller="ShoppingList" asp-action="EditList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-regular fa-pen-to-square fa-xl"></i></a>
-                                    <a type="button" class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-x fa-xl"></i></a>
-                                </div>
+                    </div>
+                    <div class="col-md-2 p-3">
+                        <div class="card-footer text-right bg-transparent">
+                            <div class="row">
+                                <a type="button" class="btn btn-success mb-2 mt-2" asp-controller="ShoppingList" asp-action="ListItem" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-cart-shopping fa-xl"></i></a>
+                                <a type="button" class="btn btn-light mb-2" asp-controller="ShoppingList" asp-action="EditList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-regular fa-pen-to-square fa-xl"></i></a>
+                                <a type="button" class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@shoppingList.ShoppingListID"><i class="fa-solid fa-x fa-xl"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    }
+    <div class="pagination">
+        @if (Model.PageCount > 0)
+        {
+            <p>
+                Gösterilen Ürünler: @((Model.PageNumber - 1) * Model.PageSize + 1)  -
+                @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItemCount)
+                / @Model.TotalItemCount
+            </p>
         }
+
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))
     </div>
+</div>
 }
 
 
 @section Scripts {
     <script>
         function cardClicked(itemId) {
-            // Kartın tıklandığında yapılacak işlemler buraya yazılır.
-            // Örneğin, seçilen ürünün detay sayfasına yönlendirebilirsiniz.
-            // window.location.href = "/Product/Detail/" + itemId;
             window.location.href = "ShoppingListItem/List/" + itemId;
         }
     </script>

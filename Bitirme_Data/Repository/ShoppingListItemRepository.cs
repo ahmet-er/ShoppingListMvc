@@ -12,6 +12,13 @@ namespace Bitirme_Data.Repository
         {
             _context = context;
         }
+
+        public ShoppingListItem GetShoppingListItem(int shoppingListId, int productId)
+        {
+            return _context.ShoppingListItems
+                .SingleOrDefault(item => item.ShoppingListId == shoppingListId && item.ProductId == productId);
+        }
+
         public List<ShoppingListItem> GetShoppingListItemByShoppingListId(int shoppingListId)
         {
             return _context.ShoppingListItems

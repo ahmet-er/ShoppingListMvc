@@ -3,6 +3,7 @@ using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using X.PagedList;
 
 namespace Bitirme_Projesi.Controllers
 {
@@ -18,9 +19,10 @@ namespace Bitirme_Projesi.Controllers
             _shoppingListItemBusiness = shoppingListItemBusiness;
             _productBusiness = productBusiness;
         }
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             ViewData["Title"] = "Listeler";
+            int pageListSize = 3;
 
             var currentUser = HttpContext.User;
             var userIdClaim = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
@@ -31,7 +33,9 @@ namespace Bitirme_Projesi.Controllers
 
                 var shoppingLists = _shoppingListBusiness.GetShoppingListsByUserId(userId);
 
-                return View(shoppingLists);
+                var pagedShoppingList = shoppingLists.ToPagedList(page, pageListSize);
+
+                return View(pagedShoppingList);
             }
             return View();
         }

@@ -30,7 +30,7 @@ namespace Bitirme_Projesi.Controllers
             var categories = _categoryBusiness.GetAllCategories();
             var products = _productBusiness.GetAllProducts();
 
-            
+
 
             var pagedCategories = categories.ToPagedList(pageCategories ?? 1, pageCategorySize);
             var pagedProducts = products.ToPagedList(pageProducts ?? 1, pageProductSize);
@@ -53,6 +53,13 @@ namespace Bitirme_Projesi.Controllers
         {
             if (ModelState.IsValid)
             {
+                string categoryName = categoryViewModel.Name.Trim();
+
+                if (_categoryBusiness.CategoryExists(categoryName))
+                {
+                    ModelState.AddModelError("Name", "Bu kategori adını zaten girdiniz");
+                    return View(categoryViewModel);
+                }
                 var category = new Category
                 {
                     Name = categoryViewModel.Name
@@ -124,19 +131,28 @@ namespace Bitirme_Projesi.Controllers
         {
             if (ModelState.IsValid)
             {
+                string productName = productViewModel.Name.Trim();
+
+                // ad kontrolü
+                if (_productBusiness.ProductExists(productName))
+                {
+                    ModelState.AddModelError("Name", "Bu ürünü zaten eklediniz.");
+                    return View(productViewModel);
+                }
+
                 // dosya yükleme
                 if (file != null && file.Length > 0)
                 {
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "img");
                     var filePath = Path.Combine(uploads, file.FileName);
-                    using(var fileStream = new FileStream(filePath, FileMode.Create))
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
 
                     productViewModel.ImageFilePath = "/img/" + file.FileName;
                 }
-                
+
 
                 // çalışan kod
                 var product = new Product
@@ -153,7 +169,7 @@ namespace Bitirme_Projesi.Controllers
             else
             {
                 var errors = ModelState.Values.SelectMany(e => e.Errors);
-                foreach(var error in errors) 
+                foreach (var error in errors)
                 {
                     Console.WriteLine(error.ErrorMessage);
                 }
@@ -186,51 +202,63 @@ namespace Bitirme_Projesi.Controllers
         public IActionResult UpdateProduct(ProductViewModel productViewModel, IFormFile file)
         {
             var product = _productBusiness.GetProductWithCategory(productViewModel.Id);
-            if (ModelState.IsValid)
+
+            //if (file == null)
+            //{
+            //    productViewModel.ImageFilePath = product.ImageFilePath;
+            //    ModelState.Remove("ImageFilePath");
+            //}
+
+            //if (ModelState.IsValid)
+            //{
+            // resim güncelleme
+            if (file != null && file.Length > 0)
             {
-                // resim güncelleme
-                if (file != null && file.Length > 0)
+                // Eski resmi silme
+                if (!string.IsNullOrEmpty(product.ImageFilePath))
                 {
-                    // Eski resmi silme
-                    if (!string.IsNullOrEmpty(product.ImageFilePath))
+                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageFilePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
                     {
-                        var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageFilePath.TrimStart('/'));
-                        if (System.IO.File.Exists(oldFilePath))
-                        {
-                            System.IO.File.Delete(oldFilePath);
-                        }
+                        System.IO.File.Delete(oldFilePath);
                     }
-
-                    // yeni resmi yükleme
-                    var upload = Path.Combine(_webHostEnvironment.WebRootPath, "img");
-                    var newFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    var newFilePath = Path.Combine(upload, newFileName);
-                    using(var fileStream = new FileStream(newFilePath, FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-
-                    productViewModel.ImageFilePath = "/img/" + newFileName;
                 }
 
-                // çalışan
-                //var product = _productBusiness.GetProductWithCategory(productViewModel.Id);
-                if (product != null)
+                // yeni resmi yükleme
+                var upload = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+                var newFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                var newFilePath = Path.Combine(upload, newFileName);
+                using (var fileStream = new FileStream(newFilePath, FileMode.Create))
                 {
-                    product.Name = productViewModel.Name;
-                    product.Price = productViewModel.Price;
-                    product.ImageFilePath = productViewModel.ImageFilePath;
-                    product.CategoryID = productViewModel.CategoryId;
-
-                    _productBusiness.UpdateProduct(product);
-
-                    return RedirectToAction(nameof(Index));
+                    file.CopyTo(fileStream);
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Ürün bulunamadı");
-                }
+
+                productViewModel.ImageFilePath = "/img/" + newFileName;
             }
+            else
+            {
+                productViewModel.ImageFilePath = product.ImageFilePath;
+            }
+
+
+            // çalışan
+            //var product = _productBusiness.GetProductWithCategory(productViewModel.Id);
+            if (product != null)
+            {
+                product.Name = productViewModel.Name;
+                product.Price = productViewModel.Price;
+                product.ImageFilePath = productViewModel.ImageFilePath;
+                product.CategoryID = productViewModel.CategoryId;
+
+                _productBusiness.UpdateProduct(product);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ModelState.AddModelError("", "Ürün bulunamadı");
+            }
+            //}
 
             var categories = _categoryBusiness.GetAllCategories();
             productViewModel.Categories = categories.Select(c => new SelectListItem

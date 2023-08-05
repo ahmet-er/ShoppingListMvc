@@ -20,9 +20,8 @@ namespace Bitirme_Business.Business
             _shoppingListItemRepo.Add(shoppingListItem);
         }
 
-        public void DeleteShoppingListItem(int shoppingListItemId)
+        public void DeleteShoppingListItem(ShoppingListItem shoppingListItem)
         {
-            var shoppingListItem = _shoppingListItemRepo.GetById(shoppingListItemId);
             _shoppingListItemRepo.Delete(shoppingListItem);
         }
 
@@ -39,6 +38,11 @@ namespace Bitirme_Business.Business
         public ShoppingListItem GetShoppingListItem(int shoppingListItemId)
         {
             return _shoppingListItemRepo.GetById(shoppingListItemId);
+        }
+
+        public ShoppingListItem GetShoppingListItemByShoppingListIdAndProductId(int shoppingListId, int productId)
+        {
+            return _customShoppingListItemRepo.GetShoppingListItem(shoppingListId, productId);
         }
 
         public void UpdateShoppingListItem(ShoppingListItem shoppingListItem)
