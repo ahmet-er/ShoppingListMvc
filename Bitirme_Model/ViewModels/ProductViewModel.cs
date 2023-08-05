@@ -10,6 +10,5 @@ namespace Bitirme_Model.ViewModels
         public string? ImageFilePath { get; set; }
         public int CategoryId { get; set; }
         public IEnumerable<SelectListItem>? Categories { get; set; }
-
     }
 }

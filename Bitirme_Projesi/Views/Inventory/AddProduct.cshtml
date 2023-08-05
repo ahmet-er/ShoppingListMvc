@@ -25,21 +25,23 @@
                 <input type="file" name="file" asp-for="ImageFilePath" class="form-control" />
                 <span asp-validation-for="ImageFilePath" class="text-danger"></span>
             </div>
-            @if (Model.Categories != null && Model.Categories.Any())
-            {
 
-                <div class="form-group mb-3">
-                    <label asp-for="CategoryId" class="control-label">Kategori</label>
+            <div class="form-group mb-3">
+                <label asp-for="CategoryId" class="control-label">Kategori</label>
+
+                @if (Model.Categories != null && Model.Categories.Any())
+                {
                     <select asp-for="CategoryId" asp-items="@Model.Categories" class="form-control">
                         <option value="0">Tüm Kategoriler</option>
                     </select>
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
-                </div>
-            }
-            else
-            {
-                <p>kategori yok</p>
-            }
+                }
+                else
+                {
+                    <p>Kategori yok</p>
+                }
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
 
             <div class="form-group">
                 <input type="submit" value="Ürün Ekle" class="btn btn-primary" />
@@ -47,3 +49,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

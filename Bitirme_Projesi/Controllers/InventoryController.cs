@@ -129,6 +129,15 @@ namespace Bitirme_Projesi.Controllers
         [HttpPost]
         public IActionResult AddProduct(ProductViewModel productViewModel, IFormFile file)
         {
+            //var categories = _categoryBusiness.GetAllCategories();
+            //if (categories != null && categories.Any())
+            //{
+            //    productViewModel.Categories = new SelectList(categories, "Id", "Name");
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError("", "Hiç kategori bulunamadı.");
+            //}
             if (ModelState.IsValid)
             {
                 string productName = productViewModel.Name.Trim();

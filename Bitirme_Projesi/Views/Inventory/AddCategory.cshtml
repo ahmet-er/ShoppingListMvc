@@ -27,3 +27,7 @@
         @await Html.PartialAsync("_ValidationSummary", ViewData.ModelState.GetErrorMessages())
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

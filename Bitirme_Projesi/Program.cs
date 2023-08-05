@@ -5,8 +5,10 @@ using Bitirme_Data.Repository;
 using Bitirme_Data.Repository.Interfaces;
 using Bitirme_Model.Entities;
 using Bitirme_Projesi.Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
+builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
 
 
 var app = builder.Build();
