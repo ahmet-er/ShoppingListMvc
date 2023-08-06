@@ -1,5 +1,4 @@
-﻿using Bitirme_Model.Entities.Base;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Bitirme_Data.Repository.Interfaces
 {

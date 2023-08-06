@@ -51,9 +51,6 @@
                     }
                 </tbody>
             </table>
-            @*@Html.PagedListPager((IPagedList)Model.Categories,
-        page => Url.Action("Index", new { page }),
-                new PagedListRenderOptions() { DisplayLinkToFirstPage = PagedListDisplayMode.Always })*@
             
         <div class="pagination">
             @if (Model.Categories.PageCount > 0)
@@ -104,8 +101,6 @@
             }
         </div>
         <div class="pagination">
-            @*Ürünler - Sayfa @(Model.Products.PageCount < Model.Categories.PageCount ? Model.Products.PageNumber : Model.Categories.PageNumber)
-        of @Model.Products.PageCount*@
 
             @if (Model.Products.PageCount > 0)
             {

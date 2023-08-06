@@ -129,15 +129,6 @@ namespace Bitirme_Projesi.Controllers
         [HttpPost]
         public IActionResult AddProduct(ProductViewModel productViewModel, IFormFile file)
         {
-            //var categories = _categoryBusiness.GetAllCategories();
-            //if (categories != null && categories.Any())
-            //{
-            //    productViewModel.Categories = new SelectList(categories, "Id", "Name");
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError("", "Hiç kategori bulunamadı.");
-            //}
             if (ModelState.IsValid)
             {
                 string productName = productViewModel.Name.Trim();
@@ -212,14 +203,6 @@ namespace Bitirme_Projesi.Controllers
         {
             var product = _productBusiness.GetProductWithCategory(productViewModel.Id);
 
-            //if (file == null)
-            //{
-            //    productViewModel.ImageFilePath = product.ImageFilePath;
-            //    ModelState.Remove("ImageFilePath");
-            //}
-
-            //if (ModelState.IsValid)
-            //{
             // resim güncelleme
             if (file != null && file.Length > 0)
             {
@@ -251,7 +234,6 @@ namespace Bitirme_Projesi.Controllers
 
 
             // çalışan
-            //var product = _productBusiness.GetProductWithCategory(productViewModel.Id);
             if (product != null)
             {
                 product.Name = productViewModel.Name;

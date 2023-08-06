@@ -1,12 +1,7 @@
 ﻿using Bitirme_Data.Context;
 using Bitirme_Data.Repository.Interfaces;
-using Bitirme_Model.Entities.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bitirme_Data.Repository
 {

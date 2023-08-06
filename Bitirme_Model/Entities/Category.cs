@@ -1,6 +1,6 @@
 ﻿namespace Bitirme_Model.Entities
 {
-    public class Category /*: BaseEntity*/
+    public class Category
     {
         public Category()
         {

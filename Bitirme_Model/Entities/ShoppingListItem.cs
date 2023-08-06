@@ -1,8 +1,6 @@
-﻿using Bitirme_Model.Entities.Base;
-
-namespace Bitirme_Model.Entities
+﻿namespace Bitirme_Model.Entities
 {
-    public class ShoppingListItem/* : BaseEntity*/
+    public class ShoppingListItem
     {
         public int ShoppingListId { get; set; }
         public int ProductId { get; set; }

@@ -17,11 +17,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ShoppingListDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// Transient: geçici => her istekte yeni oluþturur
 builder.Services.AddTransient<IGenericRepository<Category>, GenericRepository<Category>>();
 builder.Services.AddTransient<IGenericRepository<Product>, GenericRepository<Product>>();
 builder.Services.AddTransient<IGenericRepository<ShoppingList>, GenericRepository<ShoppingList>>();
 builder.Services.AddTransient<IGenericRepository<ShoppingListItem>, GenericRepository<ShoppingListItem>>();
 
+// Scoped: kapsam => servis her talepte ayný örneði döndürülür (örnegin HTTP istegi boyunca)
 builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
 builder.Services.AddScoped<ICategoryBusiness, CategoryBusiness>();
 builder.Services.AddScoped<IShoppingListBusiness, ShoppingListBusiness>();

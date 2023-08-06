@@ -18,6 +18,5 @@ namespace Bitirme_Data.Repository
                 .Where(s => s.UserID == userId)
                 .ToList();
         }
-
     }
 }

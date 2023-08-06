@@ -1,8 +1,6 @@
-﻿using Bitirme_Model.Entities.Base;
-
-namespace Bitirme_Model.Entities
+﻿namespace Bitirme_Model.Entities
 {
-    public class Product /*: BaseEntity*/
+    public class Product
     {
         public Product()
         {

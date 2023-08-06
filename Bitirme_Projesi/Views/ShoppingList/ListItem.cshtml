@@ -166,21 +166,6 @@
                 });
             });
 
-            //// Aldım checkbox'ları değiştiğinde "UpdateItemStatus" action'ına gönder.
-            //$(".item-purchased-checkbox").change(function () {
-            //    var shoppingListId = $(this).data("shoppinglistid");
-            //    var productId = $(this).data("productid");
-            //    var isPurchased = $(this).prop("checked");
-
-            //    $.post("/ShoppingList/UpdateItemStatus", { shoppingListId: shoppingListId, productId: productId, isPurchased: isPurchased }, function (data) {
-            //        // Başarılı alert göster
-            //        showAlert("Ürün durumu güncellendi.", "success");
-            //    }).fail(function (error) {
-            //        // Hata alert göster
-            //        showAlert("Hata oluştu: " + error.responseText, "danger");
-            //    });
-            //});
-
             // Alert'leri gizleyen fonksiyon
             function showAlert(message, type) {
                 var alert = $("<div class='alert alert-" + type + "' role='alert'>" + message + "</div>").appendTo("body");
@@ -189,7 +174,7 @@
                     alert.fadeOut(function () {
                         alert.remove();
                     });
-                }, 3000);
+                }, 2000);
             }
 
             // Aldım için row select
