@@ -5,24 +5,18 @@
         <h3><span class="text-gradient d-inline"><i class="fa-solid fa-cart-shopping"></i> | @Model.Name</span></h3>
     </div>
 
-    <div class="col-auto" id="goShoppingCheckboxContainer">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="goShoppingCheckBox">
-            <label class="form-check-label" for="goShoppingCheckbox">
-                Alışverişe Başla
-            </label>
-        </div>
-    </div>
-    <div class="col-auto" id="completedCheckboxContainer" style="display: none;">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="completedCheckBox" @(Model.IsCompleted ? "checked" : "")>
-            <label class="form-check-label" for="completedCheckbox">
-                Alışveriş Tamamlandı
-            </label>
-        </div>
-    </div>
+
+
     <div class="col-auto">
         <div>
+            @if (Model.GoShopping == false)
+            {
+                <a class="btn btn-primary" id="goShoppingBtn">Alışverişe Çıkıyorum</a>
+            }
+            else
+            {
+                <a class="btn btn-success" id="shoppingDoneBtn">Alışveriş Tamamlandı</a>
+            }
             <a class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@Model.ShoppingListID">
                 <i class="fa-regular fa-trash-can"></i>
             </a>
@@ -34,6 +28,16 @@
 </div>
 <hr />
 
+@if (TempData["Message"] != null)
+{
+    <div id="alertDiv" class="alert alert-info">@TempData["Message"]</div>
+    <script>
+        setTimeout(function () {
+            $('#alertDiv').fadeOut('slow');
+        }, 2000);
+    </script>
+}
+
 <div class="table-responsive">
     <table class="table table-hover">
         <thead>
@@ -42,9 +46,17 @@
                 <th scope="col">Ürün Adı</th>
                 <th scope="col">Miktar</th>
                 <th scope="col">Açıklama</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+
+                @if (Model.GoShopping == false)
+                {
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                }
+
+                @if (Model.GoShopping == true)
+                {
+                    <th scope="col"></th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -58,34 +70,41 @@
                     <td>@item.Amount</td>
                     <td>@item.Description</td>
 
-                    <td>
-                        <a class="text-primary"
-                           asp-controller="ShoppingListItem"
-                           asp-action="EditShoppingListItem"
-                           asp-route-shoppingListId="@Model.ShoppingListID"
-                           asp-route-productId="@item.ProductId">
-                            <i class="fa-solid fa-pen-to-square fa-xl"></i>
-                        </a>
-                    </td>
+                    @if (Model.GoShopping == false)
+                    {
+                        <td>
+                            <a class="text-primary"
+                               asp-controller="ShoppingListItem"
+                               asp-action="EditShoppingListItem"
+                               asp-route-shoppingListId="@Model.ShoppingListID"
+                               asp-route-productId="@item.ProductId">
+                                <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                            </a>
+                        </td>
 
-                    <td>
-                        <a class="text-danger"
-                           asp-controller="ShoppingListItem"
-                           asp-action="DeleteShoppingListItem"
-                           asp-route-shoppingListId="@Model.ShoppingListID"
-                           asp-route-productId="@item.ProductId">
-                            <i class="fa-regular fa-trash-can fa-xl"></i>
-                        </a>
-                    </td>
+                        <td>
+                            <a class="text-danger"
+                               asp-controller="ShoppingListItem"
+                               asp-action="DeleteShoppingListItem"
+                               asp-route-shoppingListId="@Model.ShoppingListID"
+                               asp-route-productId="@item.ProductId">
+                                <i class="fa-regular fa-trash-can fa-xl"></i>
+                            </a>
+                        </td>
+                    }
 
-                    <td>
-                        <div class="form-check">
-                            <input class="form-check-input item-purchased-checkbox" type="checkbox" data-shoppingListId="@Model.ShoppingListID" data-productId="@item.ProductId" @(item.Aldimi ? "checked" : "")>
-                            <label class="form-check-label">
-                                Aldım
-                            </label>
-                        </div>
-                    </td>
+                    @if (Model.GoShopping == true)
+                    {
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input item-purchased-checkbox" type="checkbox" data-shoppingListId="@Model.ShoppingListID" data-productId="@item.ProductId">
+                                <label class="form-check-label">
+                                    Aldım
+                                </label>
+                            </div>
+                        </td>
+                    }
+
                 </tr>
             }
         </tbody>
@@ -94,57 +113,73 @@
 
 @section Scripts {
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var goShoppingCheckBox = document.getElementById("goShoppingCheckBox");
-                var completedCheckBox = document.getElementById("completedCheckBox");
-                var completedCheckboxContainer = document.getElementById("completedCheckboxContainer");
-                var goShoppingCheckboxContainer = document.getElementById("goShoppingCheckboxContainer");
-
-                goShoppingCheckBox.addEventListener("change", function () {
-                    if (goShoppingCheckBox.checked) {
-                        completedCheckboxContainer.style.display = "block";
-                        goShoppingCheckboxContainer.style.display = "none";
-                        completedCheckBox.checked = false;
-                    } else {
-                        completedCheckboxContainer.style.display = "none";
-                    }
-                });
-                completedCheckBox.addEventListener("change", function () {
-                    if (completedCheckBox.checked) {
-                        completedCheckboxContainer.style.display = "none";
-                        goShoppingCheckboxContainer.style.display = "block";
-                        goShoppingCheckBox.checked = false;
-                    } else {
-
+    $(document).ready(function () {
+            // Alışverişe Çıkıyorum
+            $('#goShoppingBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("GoShopping", "ShoppingList")', // Uygulamanızın controller ve action adını düzenleyin
+                    type: 'POST',
+                    data: { shoppingListID: @Model.ShoppingListID }, // Eğer listeden gelen ID değilse düzenleyin
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Alışverişe çıkıldı olarak işaretlendi.');
+                            location.reload(); // Sayfayı yenileme
+                        } else {
+                            alert('İşlem sırasında bir hata oluştu.');
+                        }
+                    },
+                    error: function () {
+                        alert('İstek sırasında bir hata oluştu.');
                     }
                 });
             });
 
-        $(document).ready(function () {
-            // Alışveriş Tamamlandı checkbox'ı değiştiğinde "CompleteShopping" action'ına gönder.
-            $("#completedCheckbox").change(function () {
-                if ($(this).prop("checked")) {
-                    var shoppingListId = @Model.ShoppingListID;
-                    $.post("/ShoppingList/CompleteShopping", { shoppingListId: shoppingListId }, function (data) {
-                        window.location.reload();
-                    });
-                }
-            });
+            // Alışveriş Bitti
+            $('#shoppingDoneBtn').on('click', function () {
+                var selectedProductIds = [];
+                $('.item-purchased-checkbox:checked').each(function () {
+                    //selectedProductIds.push($(this).data('productId'));
+                    var productId = $(this).attr('data-productId');
+                    if (productId) {
+                        selectedProductIds.push(productId);
+                    }
+                });
 
-            // Aldım checkbox'ları değiştiğinde "UpdateItemStatus" action'ına gönder.
-            $(".item-purchased-checkbox").change(function () {
-                var shoppingListId = $(this).data("shoppinglistid");
-                var productId = $(this).data("productid");
-                var isPurchased = $(this).prop("checked");
-
-                $.post("/ShoppingList/UpdateItemStatus", { shoppingListId: shoppingListId, productId: productId, isPurchased: isPurchased }, function (data) {
-                    // Başarılı alert göster
-                    showAlert("Ürün durumu güncellendi.", "success");
-                }).fail(function (error) {
-                    // Hata alert göster
-                    showAlert("Hata oluştu: " + error.responseText, "danger");
+                $.ajax({
+                    url: '@Url.Action("ShoppingDone", "ShoppingList")',
+                    type: 'POST',
+                    data: {
+                        shoppingListID: @Model.ShoppingListID,
+                        selectedProductIds: selectedProductIds
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Alışveriş tamamlandı.');
+                            location.reload();
+                        } else {
+                            alert('İşlem sırasında bir hata oluştu.');
+                        }
+                    },
+                    error: function () {
+                        alert('İstek sırasında bir hata oluştu.');
+                    }
                 });
             });
+
+            //// Aldım checkbox'ları değiştiğinde "UpdateItemStatus" action'ına gönder.
+            //$(".item-purchased-checkbox").change(function () {
+            //    var shoppingListId = $(this).data("shoppinglistid");
+            //    var productId = $(this).data("productid");
+            //    var isPurchased = $(this).prop("checked");
+
+            //    $.post("/ShoppingList/UpdateItemStatus", { shoppingListId: shoppingListId, productId: productId, isPurchased: isPurchased }, function (data) {
+            //        // Başarılı alert göster
+            //        showAlert("Ürün durumu güncellendi.", "success");
+            //    }).fail(function (error) {
+            //        // Hata alert göster
+            //        showAlert("Hata oluştu: " + error.responseText, "danger");
+            //    });
+            //});
 
             // Alert'leri gizleyen fonksiyon
             function showAlert(message, type) {
@@ -156,9 +191,8 @@
                     });
                 }, 3000);
             }
-        });
 
-        $(document).ready(function () {
+            // Aldım için row select
             $('.row-select').on('click', function () {
                 var checkbox = $(this).find('.item-purchased-checkbox');
                 checkbox.prop('checked', !checkbox.prop('checked'));

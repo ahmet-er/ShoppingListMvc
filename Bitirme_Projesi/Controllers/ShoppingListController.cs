@@ -2,6 +2,7 @@
 using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using System.Security.Claims;
 using X.PagedList;
 
@@ -112,6 +113,7 @@ namespace Bitirme_Projesi.Controllers
         public IActionResult ListItem(int id)
         {
             var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
+            ViewData["Title"] = shoppingList.Name;
             var shoppingListItems = _shoppingListItemBusiness.GetItemsByShoppingListId(id);
 
             foreach(var shoppingListItem in shoppingListItems)
@@ -128,7 +130,7 @@ namespace Bitirme_Projesi.Controllers
             {
                 ShoppingListID = shoppingList.ShoppingListID,
                 Name = shoppingList.Name,
-                IsCompleted = false,
+                GoShopping = shoppingList.AlisveriseCikildiMi,
                 ShoppingListItems = shoppingListItems.Select(sli => new ShoppingListItemViewModel
                 {
                     ShoppingListId = sli.ShoppingListId,
@@ -141,6 +143,52 @@ namespace Bitirme_Projesi.Controllers
                 }).ToList()
             };
             return View(shoppingListViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult GoShopping(int shoppingListId)
+        { 
+            var shoppingList = _shoppingListBusiness.GetShoppingListById(shoppingListId);
+
+            if (shoppingList != null)
+            {
+                shoppingList.AlisveriseCikildiMi = true;
+                _shoppingListBusiness.UpdateShoppingList(shoppingList);
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public IActionResult ShoppingDone(int shoppingListId, List<int> selectedProductIds)
+        {
+            var shoppingList = _shoppingListBusiness.GetShoppingListById(shoppingListId);
+
+            if (shoppingList != null)
+            {
+                shoppingList.AlisveriseCikildiMi = false;
+                _shoppingListBusiness.UpdateShoppingList(shoppingList);
+
+                if (selectedProductIds.Count != 0)
+                {
+                    foreach (var item in selectedProductIds)
+                    {
+                        var shoppingListItem = _shoppingListItemBusiness.GetShoppingListItemByShoppingListIdAndProductId(shoppingListId, item);
+
+                        if (shoppingListItem != null)
+                        {
+                            _shoppingListItemBusiness.DeleteShoppingListItem(shoppingListItem);
+                        }
+                        else
+                        {
+                            return NotFound("Seçili ürün bulunamadı.");
+                        }
+                    }
+                }
+
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
         }
     }
 }

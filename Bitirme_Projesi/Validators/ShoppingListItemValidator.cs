@@ -1,9 +1,9 @@
-﻿using Bitirme_Model.Entities;
+﻿using Bitirme_Model.ViewModels;
 using FluentValidation;
 
 namespace Bitirme_Projesi.Validators
 {
-    public class ShoppingListItemValidator : AbstractValidator<ShoppingListItem>
+    public class ShoppingListItemValidator : AbstractValidator<ShoppingListItemViewModel>
     {
         public ShoppingListItemValidator()
         {

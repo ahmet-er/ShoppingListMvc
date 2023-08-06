@@ -23,10 +23,16 @@ namespace Bitirme_Projesi.Controllers
         }
         public IActionResult List(int id, int page = 1, string search = "", int? category = null)
         {
+            var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
+            if (shoppingList.AlisveriseCikildiMi == true)
+            {
+                TempData["Message"] = "Liste üzerinde işlem yapmak için alışverişi tamamlayın.";
+                return RedirectToAction("ListItem", "ShoppingList", new { id = id });
+            }
             ViewData["Title"] = "Liste'ye Ürün Ekle";
 
             int pageProductSize = 8;
-            var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
+            
             if (shoppingList == null)
             {
                 return NotFound();
