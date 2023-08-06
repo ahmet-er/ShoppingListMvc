@@ -46,6 +46,7 @@ namespace Bitirme_Projesi.Controllers
         #region CATEGORY
         public IActionResult AddCategory()
         {
+            ViewData["Title"] = "Kategori Ekle";
             return View();
         }
         [HttpPost]
@@ -75,6 +76,7 @@ namespace Bitirme_Projesi.Controllers
         public IActionResult UpdateCategory(int id)
         {
             var category = _categoryBusiness.GetCategoryById(id);
+            ViewData["Title"] = category.Name + " Güncelle";
             if (category == null)
             {
                 return NotFound();
@@ -115,6 +117,7 @@ namespace Bitirme_Projesi.Controllers
         #region PRODUCT
         public IActionResult AddProduct()
         {
+            ViewData["Title"] = "Ürün Ekle";
             var categories = _categoryBusiness.GetAllCategories();
             var viewModel = new ProductViewModel
             {
@@ -183,6 +186,7 @@ namespace Bitirme_Projesi.Controllers
         {
             var categories = _categoryBusiness.GetAllCategories();
             var product = _productBusiness.GetProductWithCategory(id);
+            ViewData["Title"] = product.Name + " Güncelle";
             var productViewModel = new ProductViewModel
             {
                 Id = product.ProductID,

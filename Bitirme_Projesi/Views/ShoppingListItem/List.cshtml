@@ -52,10 +52,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title">@product.Name</h5>
-                            <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.CategoryName</div></div>
+                            <div class="badge bg-gradient-primary-to-secondary text-white mb-4 d-flex align-items-center">
+                                <i class="fa-solid fa-tag me-2"></i>
+                                <div class="text-uppercase">@product.CategoryName</div>
+                            </div>
                         </div>
                         <p class="card-text">Fiyat: ₺@product.Price</p>
-
+                        <hr />
                         <div class="d-flex justify-content-between">
                             <div class="input-group">
                                 <div style="width: 60px;">
@@ -69,8 +72,8 @@
                             </div>
                             <div>
 
-                                <button class="btn btn-primary addToCartBtn" onclick="addItemToList(@product.ProductId)">
-                                    Ekle
+                                <button class="btn btn-primary addToCartBtn d-flex align-items-center" onclick="addItemToList(@product.ProductId)">
+                                    <i class="fa-solid fa-cart-plus me-2"></i> Ekle
                                 </button>
                             </div>
                         </div>

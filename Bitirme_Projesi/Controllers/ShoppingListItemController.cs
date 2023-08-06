@@ -29,7 +29,7 @@ namespace Bitirme_Projesi.Controllers
                 TempData["Message"] = "Liste üzerinde işlem yapmak için alışverişi tamamlayın.";
                 return RedirectToAction("ListItem", "ShoppingList", new { id = id });
             }
-            ViewData["Title"] = "Liste'ye Ürün Ekle";
+            ViewData["Title"] = shoppingList.Name + "Listesine Ürün Ekle";
 
             int pageProductSize = 8;
             
@@ -106,6 +106,8 @@ namespace Bitirme_Projesi.Controllers
             var shoppingListItem = _shoppingListItemBusiness.GetShoppingListItemByShoppingListIdAndProductId(shoppingListId, productId);
             var shoppingList = _shoppingListBusiness.GetShoppingListById(shoppingListId);
             var product = _productBusiness.GetProductWithCategory(productId);
+
+            ViewData["Title"] = product.Name + " Güncelle";
 
             if (shoppingListItem == null)
             {

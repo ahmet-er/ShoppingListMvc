@@ -8,14 +8,14 @@
 
 <div class="row">
     <div class="col">
-        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-users"></i> | Envanter Yönetimi</span></h3>
+        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-cubes"></i> | Envanter Yönetimi</span></h3>
     </div>
     <div class="col-auto">
         <a class="btn btn-outline-primary" asp-controller="Inventory" asp-action="AddCategory">
-            <i class="fa-solid fa-list"></i> | Kategori Ekle
+            <i class="fa-solid fa-tags"></i> Kategori Ekle
         </a>
         <a class="btn btn-outline-primary" asp-controller="Inventory" asp-action="AddProduct">
-            <i class="fa-solid fa-boxes-stacked"></i> | Ürün Ekle
+            <i class="fa-solid fa-boxes-stacked"></i> Ürün Ekle
         </a>
     </div>
 </div>
@@ -79,10 +79,16 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <h5 class="card-title">@product.Name</h5>
-                                <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.Category.Name</div></div>
+                                @*<div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">@product.Category.Name</div></div>*@
+
+
+                                <div class="badge bg-gradient-primary-to-secondary text-white mb-4 d-flex align-items-center">
+                                    <i class="fa-solid fa-tag me-2"></i>
+                                    <div class="text-uppercase">@product.Category.Name</div>
+                                </div>
                             </div>
                             <p class="card-text">Fiyat: ₺@product.Price</p>
-
+                            <hr />
                             <div class="d-flex justify-content-around mt-2">
                                 <div>
                                     <a class="text-primary" asp-controller="Inventory" asp-action="UpdateProduct" asp-route-id="@product.ProductID">

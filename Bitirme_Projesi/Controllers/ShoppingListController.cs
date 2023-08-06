@@ -43,6 +43,7 @@ namespace Bitirme_Projesi.Controllers
         [HttpGet]
         public IActionResult CreateList()
         {
+            ViewData["Title"] = "Liste Oluştur";
             return View();
         }
         [HttpPost]
@@ -75,7 +76,8 @@ namespace Bitirme_Projesi.Controllers
         public IActionResult EditList(int id)
         {
             var shoppingList = _shoppingListBusiness.GetShoppingListById(id);
-            if(shoppingList == null)
+            ViewData["Title"] = shoppingList.Name + " Güncelle";
+            if (shoppingList == null)
             {
                 return NotFound();
             }

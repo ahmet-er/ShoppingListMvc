@@ -2,7 +2,7 @@
 
 <div class="row" id="rowToColContainer">
     <div class="col">
-        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-cart-shopping"></i> | @Model.Name</span></h3>
+        <h3><span class="text-gradient d-inline"><i class="fa-solid fa-clipboard-list"></i> | @Model.Name</span></h3>
     </div>
 
 
@@ -11,11 +11,11 @@
         <div>
             @if (Model.GoShopping == false)
             {
-                <a class="btn btn-primary" id="goShoppingBtn">Alışverişe Çıkıyorum</a>
+                <a class="btn btn-primary" id="goShoppingBtn"><i class="fa-solid fa-person-walking"></i> Alışverişe Çıkıyorum</a>
             }
             else
             {
-                <a class="btn btn-success" id="shoppingDoneBtn">Alışveriş Tamamlandı</a>
+                <a class="btn btn-success" id="shoppingDoneBtn"><i class="fa-solid fa-flag-checkered"></i> Alışveriş Tamamlandı</a>
             }
             <a class="btn btn-danger" asp-controller="ShoppingList" asp-action="DeleteList" asp-route-id="@Model.ShoppingListID">
                 <i class="fa-regular fa-trash-can"></i>
