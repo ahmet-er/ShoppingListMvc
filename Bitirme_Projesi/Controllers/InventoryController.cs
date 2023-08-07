@@ -1,12 +1,14 @@
 ﻿using Bitirme_Business.Interfaces;
 using Bitirme_Model.Entities;
 using Bitirme_Model.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using X.PagedList;
 
 namespace Bitirme_Projesi.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class InventoryController : Controller
     {
         private readonly ICategoryBusiness _categoryBusiness;

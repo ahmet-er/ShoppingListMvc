@@ -37,6 +37,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ShoppingListDbContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
 
@@ -56,12 +59,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "editShoppingListItem",
-    pattern: "ShoppingListItem/EditShoppingListItem/{sId}/{pId}",
-    defaults: new { controller = "ShoppingListItem", action = "EditShoppingListItem" });
+//app.MapControllerRoute(
+//    name: "editShoppingListItem",
+//    pattern: "ShoppingListItem/EditShoppingListItem/{sId}/{pId}",
+//    defaults: new { controller = "ShoppingListItem", action = "EditShoppingListItem" });
 
 app.MapControllerRoute(
     name: "default",
