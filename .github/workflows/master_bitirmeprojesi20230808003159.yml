@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'BitirmeProjesi20230808003159'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8014C6A2E16849A78B8C05A033FFAEF5 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55E7DD42299D49E8AEA551223BAF2438 }}
           package: .
