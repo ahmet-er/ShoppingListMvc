@@ -12,6 +12,14 @@ namespace Bitirme_Data.Context
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("AZURE_SQL_CONNECTIONSTRING");
+            }
+        }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ShoppingList> ShoppingLists { get; set; }
