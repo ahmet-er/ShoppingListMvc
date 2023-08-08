@@ -37,24 +37,31 @@ Uygulamanın kullanılabilmesi için üye olmak gerekmektedir.
 
 ![homepage](https://r.resimlink.com/lzbSsFR.png "homepage")
 <p align="center">Homepage</p>
+<hr />
 
 ![register](https://r.resimlink.com/6RUMzm7.png "register")
 <p align="center">Register</p>
+<hr />
 
 ![login](https://r.resimlink.com/RY0pzDmT.png "login")
 <p align="center">Log in</p>
+<hr />
 
 ![inventory](https://r.resimlink.com/ANTSECG1I.png "inventory")
 <p align="center">Inventory</p>
+<hr />
 
 ![shoppinglist](https://r.resimlink.com/6Wh9SMdLke.png "shoppinglist")
 <p align="center">Shopping List</p>
+<hr />
 
 ![additemtoshoppinglist](https://r.resimlink.com/iyZwe.png "additemtoshoppinglist")
 <p align="center">Add Item to Shopping List</p>
+<hr />
 
 ![manageshoppinglist](https://r.resimlink.com/iD5kXehum6N.png "manageshoppinglist")
 <p align="center">Manage Shopping List</p>
+<hr />
 
 ![editlistitem](https://r.resimlink.com/yLxGANsOFa.png "editlistitem")
 <p align="center">Edit List Item</p>
