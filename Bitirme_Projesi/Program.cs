@@ -50,6 +50,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidation(a => a.RegisterValidatorsFromAssemblyContaining<Program>());
 
+// Add App Service logging
+builder.Logging.AddAzureWebAppDiagnostics(); // ær azure
 
 var app = builder.Build();
 
