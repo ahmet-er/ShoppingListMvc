@@ -9,7 +9,7 @@
 ![login](https://r.resimlink.com/RY0pzDmT.png "login")
 <p align="center">Log in</p>
 
-![inventory](https://r.resimlink.com/bzTQV-xg.png "inventory")
+![inventory](https://r.resimlink.com/ANTSECG1I.png "inventory")
 <p align="center">Inventory</p>
 
 ![shoppinglist](https://r.resimlink.com/6Wh9SMdLke.png "shoppinglist")
@@ -18,7 +18,7 @@
 ![additemtoshoppinglist](https://r.resimlink.com/iyZwe.png "additemtoshoppinglist")
 <p align="center">Add Item to Shopping List</p>
 
-![manageshoppinglist](https://r.resimlink.com/qpt6ur9Va-.png "manageshoppinglist")
+![manageshoppinglist](https://r.resimlink.com/iD5kXehum6N.png "manageshoppinglist")
 <p align="center">Manage Shopping List</p>
 
 ![editlistitem](https://r.resimlink.com/yLxGANsOFa.png "editlistitem")
