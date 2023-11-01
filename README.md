@@ -48,33 +48,33 @@ Uygulamanın kullanılabilmesi için üye olmak gerekmektedir.
 
 # Ekran Görüntüleri
 
-![homepage](https://r.resimlink.com/lzbSsFR.png "homepage")
+![homepage](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/16304ee9-4b53-4df7-89d8-fb8153479bea "Homepage")
 <p align="center">Homepage</p>
 <hr />
 
-![register](https://r.resimlink.com/6RUMzm7.png "register")
+![register](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/32803e7c-866d-4246-89c5-161fab857be8 "Register")
 <p align="center">Register</p>
 <hr />
 
-![login](https://r.resimlink.com/RY0pzDmT.png "login")
+![login](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/1447b66f-ff57-4ba8-95eb-54d041ce5bbc "Login")
 <p align="center">Log in</p>
 <hr />
 
-![inventory](https://r.resimlink.com/ANTSECG1I.png "inventory")
+![inventory](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/eb271916-a0c8-4749-abd1-855f0d1862e9 "Inventory")
 <p align="center">Inventory</p>
 <hr />
 
-![shoppinglist](https://r.resimlink.com/6Wh9SMdLke.png "shoppinglist")
+![shoppinglist](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/d6e16c45-c557-4b79-9007-3038d2d36796 "Shopping List")
 <p align="center">Shopping List</p>
 <hr />
 
-![additemtoshoppinglist](https://r.resimlink.com/iyZwe.png "additemtoshoppinglist")
+![additemtoshoppinglist](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/77702975-57fa-46ef-84fe-d05fe454236c "Add Item to Shopping List")
 <p align="center">Add Item to Shopping List</p>
 <hr />
 
-![manageshoppinglist](https://r.resimlink.com/iD5kXehum6N.png "manageshoppinglist")
+![manageshoppinglist](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/9ecaee33-89b7-49ca-9927-8ee45daa2948 "Manage Shopping List")
 <p align="center">Manage Shopping List</p>
 <hr />
 
-![editlistitem](https://r.resimlink.com/yLxGANsOFa.png "editlistitem")
+![editlistitem](https://github.com/ahmet-er/TechcareerBackendBootcampProject/assets/75838965/d6aa5c1f-8456-4695-927a-6962a43d51ba "Edit List Item")
 <p align="center">Edit List Item</p>
